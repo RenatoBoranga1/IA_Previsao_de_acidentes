@@ -28,6 +28,7 @@ torch.serialization.add_safe_globals([
     neuralprophet.configure.AR,
     neuralprophet.configure.Normalization,
     neuralprophet.df_utils.ShiftScale,
+    pd._libs.tslibs.timestamps._unpickle_timestamp,
     pd.libs.tslibs.timestamps.unpickle_timestamp,
     pd.libs.tslibs.timedeltas.timedelta_unpickle,
     np.core.multiarray.scalar,
