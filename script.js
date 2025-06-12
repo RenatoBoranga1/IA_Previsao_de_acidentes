@@ -32,11 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingSection.classList.remove('hidden');
 
         try {
-            const response = await fetch(`http://127.0.0.1:5000/predict?date=${selectedDate}`);
+            // CORRIGIDO: URL do backend para a URL do Render e `snake_case` para os parâmetros da URL
+            const response = await fetch(`https://ia-previsao-ritmo-backend.onrender.com/predict?date=${selectedDate}`);
             const data = await response.json();
 
             if (!response.ok) {
                 errorMessageP.textContent = data.error || "Erro desconhecido na previsão.";
+                // CORRIGIDO: Nomes das chaves JSON para `snake_case` no erro
                 errorDetailsP.textContent = `Data solicitada: ${data.requested_date || 'N/A'}, Período da Previsão: ${data.forecast_period_start || 'N/A'} a ${data.forecast_period_end || 'N/A'}.`;
                 errorDisplaySection.classList.remove('hidden');
                 loadingSection.classList.add('hidden');
@@ -45,26 +47,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Popula os resultados
             dataPrevisaoSpan.textContent = data.data_previsao;
-            // Verificação de null/undefined para totalPrevistoHojeP
+            // CORRIGIDO: Nome da chave JSON para `snake_case`
             if (data.previsao_total_yhat1 !== null && data.previsao_total_yhat1 !== undefined) {
                 totalPrevistoHojeP.textContent = data.previsao_total_yhat1.toFixed(2); // Não adicionamos '%' aqui pois é o total de eventos previstos, não probabilidade
             } else {
                 totalPrevistoHojeP.textContent = "N/A";
             }
 
-            // REMOVIDO: Bloco de Detalhes da Previsão
-            // detalhesPrevisaoUl.innerHTML = '';
-            // for (const key in data.detalhes_previsao) {
-            //     const li = document.createElement('li');
-            //     const value = data.detalhes_previsao[key];
-            //     li.textContent = `${key}: ${value !== null && value !== undefined ? value.toFixed(4) : 'N/A'}`;
-            //     detalhesPrevisaoUl.appendChild(li);
-            // }
-
             // Top 10 Motoristas Geral
             top10MotoristasGeralUl.innerHTML = '';
-            if (data.top_10_motoristas_geral && data.top_10_motoristas_geral.length > 0) {
-                data.top_10_motoristas_geral.forEach(motorista => {
+            // CORRIGIDO: Nome da chave JSON para `snake_case`
+            if (data.top10_motoristas_geral && data.top10_motoristas_geral.length > 0) {
+                data.top10_motoristas_geral.forEach(motorista => {
                     const li = document.createElement('li');
                     const probabilidade = motorista.Probabilidade;
                     // ALTERADO: Adicionado .replace('.', ',') e '%'
@@ -72,18 +66,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     top10MotoristasGeralUl.appendChild(li);
                 });
             } else {
-                top10MotoristasGeralUl.innerHTML = '<li>Nenhum motorista encontrado no top 10.</li>';
+                top10MotoristasGeralUl.innerHTML = 'Nenhum motorista encontrado no top 10.';
             }
 
             // Probabilidade por Tipo de Evento
             eventosEspecificosDiv.innerHTML = '';
+            // CORRIGIDO: Nome da chave JSON para `snake_case`
             if (data.probabilidade_eventos_especificos) {
+                // CORRIGIDO: Iteração sobre a chave snake_case
                 for (const evento in data.probabilidade_eventos_especificos) {
                     const eventCard = document.createElement('div');
                     eventCard.classList.add('result-card');
                     eventCard.innerHTML = `<h3>${evento}</h3>`;
                     const ul = document.createElement('ul');
 
+                    // CORRIGIDO: Iteração sobre a chave snake_case
                     const eventoData = data.probabilidade_eventos_especificos[evento];
                     if (Array.isArray(eventoData) && eventoData.length > 0) {
                         eventoData.forEach(motorista => {
@@ -94,17 +91,17 @@ document.addEventListener('DOMContentLoaded', () => {
                             ul.appendChild(li);
                         });
                     } else if (eventoData.message) {
-                        ul.innerHTML = `<li>${eventoData.message}</li>`;
+                        ul.innerHTML = `<li>${eventoData.message}</li>`; // Adicionado <li> para consistência
                     } else if (eventoData.error) {
-                        ul.innerHTML = `<li>Erro: ${eventoData.error}</li>`;
+                        ul.innerHTML = `<li>Erro: ${eventoData.error}</li>`; // Adicionado <li> para consistência
                     } else {
-                        ul.innerHTML = `<li>Nenhum dado detalhado encontrado para este evento.</li>`;
+                        ul.innerHTML = `<li>Nenhum dado detalhado encontrado para este evento.</li>`; // Adicionado <li> para consistência
                     }
                     eventCard.appendChild(ul);
                     eventosEspecificosDiv.appendChild(eventCard);
                 }
             } else {
-                eventosEspecificosDiv.innerHTML = '<p>Nenhuma probabilidade por tipo de evento disponível.</p>';
+                eventosEspecificosDiv.innerHTML = 'Nenhuma probabilidade por tipo de evento disponível.';
             }
 
             // Mostra os resultados
@@ -114,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Erro ao buscar dados:', error);
             errorMessageP.textContent = 'Não foi possível conectar ao servidor de previsão.';
-            errorDetailsP.textContent = 'Certifique-se de que o backend (app_previsao.py) está em execução.';
+            errorDetailsP.textContent = 'Certifique-se de que o backend está em execução e a URL no frontend está correta.';
             errorDisplaySection.classList.remove('hidden');
             loadingSection.classList.add('hidden');
         }
