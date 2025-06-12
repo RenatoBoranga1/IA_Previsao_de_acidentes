@@ -1,232 +1,291 @@
-/* Importar fonte do Google Fonts (garante que a fonte Poppins seja usada) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
 body {
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background-color: #F8F8F8; /* Fundo geral claro */
-    color: #010e1b; /* Navy Blue muito escuro para texto principal */
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #F8F8F8; /* Fundo geral claro */
+  color: #010e1b; /* Navy Blue muito escuro para texto principal */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* --- Header Section --- */
 header {
-    background-color: #072970; /* Navy Blue muito escuro da Ritmo */
-    color: #fff;
-    padding: 1.5rem 0;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-.header-content {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.company-logo {
-    max-height: 80px;
-    margin-bottom: 10px;
+  background-color: #072970; /* Navy Blue escuro da Ritmo */
+  color: #fff;
+  padding: 2rem 0 1rem 0;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 header h1 {
-    margin: 0;
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #E67E22; /* Laranja da Ritmo para o título principal no header */
+  margin: 0 0 0.5rem 0;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #E67E22; /* Laranja Ritmo para destaque */
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 3px rgba(20,20,20,0.06);
 }
 
 header p {
-    margin: 0.5rem 0 0;
-    font-size: 1.1rem;
-    opacity: 0.9;
+  margin: 0;
+  font-size: 1.15rem;
+  opacity: 0.93;
+  letter-spacing: 0.5px;
 }
 
 /* --- Main Content Section --- */
-main {
-    flex-grow: 1;
-    padding: 30px 20px;
-    max-width: 900px;
-    margin: 30px auto;
-    background: #fff; /* Fundo branco para o conteúdo principal */
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+main, #controls, #resultado, #uploadSection {
+  width: 100%;
+  max-width: 900px;
+  margin: 25px auto 0 auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 24px 0 rgba(15, 23, 42, .07);
+  padding: 30px 25px;
+  box-sizing: border-box;
 }
 
 #controls {
-    text-align: center;
-    margin-bottom: 30px;
-    padding-bottom: 25px;
-    border-bottom: 1px solid #ECEFF1;
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ECEFF1;
 }
 
 #controls label {
-    font-size: 1.2rem;
-    margin-right: 15px;
-    color: #010e1b; /* Navy Blue muito escuro para o label */
-    font-weight: 600;
+  font-size: 1.2rem;
+  margin-right: 15px;
+  color: #010e1b;
+  font-weight: 600;
 }
 
 #controls input[type="date"] {
-    padding: 10px 15px;
-    border: 1px solid #BDC3C7;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    color: #010e1b; /* Navy Blue muito escuro para o texto do input */
-    outline: none;
-    transition: border-color 0.3s ease;
+  padding: 10px 17px;
+  border: 1px solid #BDC3C7;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  color: #010e1b;
+  outline: none;
+  transition: border-color 0.3s;
 }
 
 #controls input[type="date"]:focus {
-    border-color: #E67E22; /* Laranja da Ritmo no foco */
+  border-color: #E67E22;
 }
 
-#controls button {
-    padding: 12px 25px;
-    background-color: #E67E22; /* Laranja da Ritmo para o botão */
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-left: 15px;
-    box-shadow: 0 4px 8px rgba(230,126,34,0.3); /* Sombra laranja para o botão */
+#controls button,
+#uploadSection button {
+  padding: 12px 25px;
+  background-color: #E67E22;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.08rem;
+  font-weight: 600;
+  margin-left: 15px;
+  margin-bottom: 5px;
+  transition: background-color 0.2s, transform 0.18s;
+  box-shadow: 0 3px 8px rgba(230,126,34,0.14);
 }
 
-#controls button:hover {
-    background-color: #D35400; /* Laranja mais escuro no hover */
-    transform: translateY(-2px);
+#controls button:hover,
+#uploadSection button:hover {
+  background-color: #D35400; /* Laranja mais escuro */
+  transform: translateY(-2px) scale(1.03);
 }
 
-/* --- Sections Visibility --- */
-.hidden {
-    display: none;
+/* --- Upload Section --- */
+#uploadSection {
+  margin-top: 30px;
+  padding: 22px 24px 18px 24px;
+  border-top: 1.5px solid #ECEFF1;
+  text-align: left;
 }
 
-/* --- Loading Message --- */
-#loading {
-    text-align: center;
-    font-size: 1.3rem;
-    color: #555;
-    padding: 20px;
-    font-weight: 600;
+#uploadSection h2 {
+  color: #010e1b;
+  font-size: 1.32rem;
+  margin-bottom: 13px;
 }
 
-/* --- Prediction Results Section --- */
-#predictionResults h2 {
-    color: #010e1b; /* Navy Blue muito escuro para o título */
-    border-bottom: 3px solid #E67E22; /* Laranja da Ritmo na linha do título */
-    padding-bottom: 15px;
-    margin-bottom: 25px;
-    font-size: 2rem;
-    font-weight: 700;
+#uploadSection input[type="file"] {
+  border: 1px solid #BDC3C7;
+  border-radius: 7px;
+  padding: 7px 8px;
+  font-size: 1rem;
+  margin-right: 12px;
 }
 
+/* Status feedback */
+#uploadStatus {
+  margin: 13px 0 0 1px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  min-height: 20px;
+}
+
+/* --- Resultado da previsão --- */
+#resultado {
+  margin-top: 20px;
+  display: none;
+}
+
+#resultado h2 {
+  color: #010e1b;
+  border-bottom: 2.5px solid #E67E22;
+  padding-bottom: 9px;
+  margin-bottom: 19px;
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+
+#resultado strong {
+  color: #E67E22; /* Laranja Ritmo para destaques */
+}
+
+#previsaoQtd {
+  font-size: 1.45rem;
+  font-family: 'Poppins', sans-serif;
+  color: #010e1b;
+  font-weight: 700;
+  padding: 0 3px;
+}
+
+#top10Motoristas {
+  padding-left: 8px;
+  margin-bottom: 12px;
+  list-style: inside decimal;
+  font-size: 1.06rem;
+}
+
+#top10Motoristas li {
+  margin-bottom: 2px;
+}
+
+#eventosEspecificos {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+/* Cards de evento */
 .result-card {
-    background-color: #ECF0F1; /* Cinza claro, bom para cards */
-    border-left: 6px solid #E67E22; /* Laranja da Ritmo na borda esquerda */
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background-color: #ECF0F1;
+  border-left: 5px solid #E67E22;
+  padding: 20px 16px;
+  border-radius: 10px;
+  min-width: 210px;
+  max-width: 340px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin-bottom: 16px;
+  flex: 1 1 220px;
 }
 
-.result-card h3 {
-    color: #010e1b; /* Navy Blue muito escuro para o título do card */
-    margin-top: 0;
-    margin-bottom: 12px;
-    font-size: 1.5rem;
-    font-weight: 600;
+.result-card strong {
+  color: #010e1b;
+  margin-bottom: 7px;
+  display: inline-block;
 }
 
 .result-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0 0;
 }
 
 .result-card ul li {
-    padding: 8px 0;
-    border-bottom: 1px dashed #BDC3C7;
-    font-size: 1.1rem;
-    color: #010e1b; /* Navy Blue muito escuro para o texto da lista */
+  padding: 6px 0;
+  border-bottom: 1px dashed #BDC3C7;
+  font-size: 1rem;
+  color: #010e1b;
 }
 
 .result-card ul li:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
-.result-card p {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #010e1b; /* Navy Blue muito escuro para números importantes */
-}
-
-/* --- Error Display Section --- */
-#errorDisplay {
-    background-color: #FEE;
-    border-left: 6px solid #C0392B;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    color: #C0392B;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-.error-title {
-    color: #C0392B;
-    font-size: 1.8rem;
-    margin-bottom: 10px;
-}
-
-#errorDisplay p {
-    font-size: 1.1rem;
-    margin-bottom: 5px;
+/* --- Mensagens de Erro --- */
+#mensagemErro {
+  margin: 18px auto;
+  background: #FBEAEA;
+  color: #C0392B;
+  border-left: 6px solid #C0392B;
+  border-radius: 8px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  padding: 18px 24px;
+  box-shadow: 0 1px 5px rgba(203, 61, 43, 0.04);
+  width: 100%;
+  max-width: 610px;
+  display: none;
+  letter-spacing: 0.02rem;
 }
 
 /* --- Footer Section --- */
 footer {
-    text-align: center;
-    padding: 1.5rem 0;
-    margin-top: 40px;
-    background-color: #010e1b; /* Navy Blue muito escuro da Ritmo */
-    color: #fff;
-    font-size: 0.95rem;
-    box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+  padding: 1.5rem 0;
+  margin-top: 40px;
+  background-color: #010e1b; /* Navy Blue muito escuro */
+  color: #fff;
+  font-size: 0.98rem;
+  box-shadow: 0 -3px 8px rgba(0,0,0,0.09);
 }
 
 footer p {
-    margin: 0.5rem 0;
+  margin: 0.5rem 0;
 }
 
-/* --- Responsive Adjustments --- */
-@media (max-width: 768px) {
-    header h1 {
-        font-size: 2rem;
-    }
+/* --- Responsividade --- */
+@media (max-width: 1000px) {
+  main, #controls, #resultado, #uploadSection {
+    max-width: 98vw;
+    padding: 19px 6vw;
+  }
+}
 
-    #controls label,
-    #controls input[type="date"],
-    #controls button {
-        display: block;
-        width: calc(100% - 40px);
-        margin: 10px auto;
-    }
+@media (max-width: 780px) {
+  header {
+    padding: 1.2rem 0;
+  }
+  header h1 {
+    font-size: 1.57rem;
+  }
+  #controls label, #controls input[type="date"], #controls button {
+    display: block;
+    width: 95%;
+    margin: 8px auto;
+    text-align: center;
+  }
+  #controls button {
+    margin-left: 0;
+    margin-top: 18px;
+  }
+  main, #controls, #resultado, #uploadSection {
+    margin: 10px 2vw;
+    padding: 13px 3vw;
+  }
+  .result-card {
+    min-width: 172px;
+    max-width: 99vw;
+  }
+}
 
-    #controls button {
-        margin-top: 20px;
-    }
-
-    main {
-        margin: 20px 10px;
-        padding: 20px;
-    }
-
-    .result-card h3 {
-        font-size: 1.3rem;
-    }
+@media (max-width: 580px) {
+  header h1 {
+    font-size: 1.1rem;
+    padding: 0;
+  }
+  #resultado h2, #uploadSection h2 {
+    font-size: 1.12rem;
+  }
+  .result-card {
+    padding: 10px 6px;
+  }
 }
