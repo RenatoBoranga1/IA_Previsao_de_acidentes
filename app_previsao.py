@@ -1,16 +1,17 @@
 import pandas as pd
 import numpy as np
+
 # Importações não utilizadas no backend, mas mantidas se houver planos futuros:
-# import matplotlib.pyplot as plt
-# import seaborn as sns
-# from termcolor import colored
+import matplotlib.pyplot as plt
+import seaborn as sns
+from termcolor import colored
 
 import neuralprophet
 from neuralprophet import NeuralProphet
 import torch
 import sys # Importado para sys.exit() em caso de erros críticos
 
-# Suas configurações de safe_globals - CORRIGIDO: addsafeglobals -> add_safe_globals
+# Suas configurações de safe_globals - CORRIGIDO: addsafeglobals -> addsafe_globals
 # Mantidas as entradas específicas de numpy.dtypes conforme seu código original,
 # pois o NeuralProphet pode ter requisitos específicos para isso.
 torch.serialization.add_safe_globals([
@@ -28,9 +29,8 @@ torch.serialization.add_safe_globals([
     neuralprophet.configure.AR,
     neuralprophet.configure.Normalization,
     neuralprophet.df_utils.ShiftScale,
-    pd._libs.tslibs.timestamps._unpickle_timestamp,
-    pd.libs.tslibs.timestamps.unpickle_timestamp,
-    pd.libs.tslibs.timedeltas.timedelta_unpickle,
+    pd._libs.tslibs.timestamps._unpickle_timestamp, # CORRIGIDO: pd.libs -> pd._libs e ._unpickle_timestamp
+    pd._libs.tslibs.timedeltas._timedelta_unpickle, # CORRIGIDO: pd.libs -> pd._libs e ._timedelta_unpickle
     np.core.multiarray.scalar,
     np.dtypes.Int64DType,
     neuralprophet.configure.ConfigFutureRegressors
@@ -43,14 +43,14 @@ from flask_cors import CORS # Para permitir que o frontend acesse o backend
 app = Flask(__name__) # CORRIGIDO: name -> __name__
 CORS(app) # Habilita CORS para todas as rotas
 
-# --- INÍCIO DO SEU CÓDIGO DE PREVISÃO ADAPTADO PARA RODAR UMA VEZ ---
+--- INÍCIO DO SEU CÓDIGO DE PREVISÃO ADAPTADO PARA RODAR UMA VEZ ---
 # Estas variáveis globais serão carregadas uma vez quando a aplicação iniciar
 dados = None
 modelo = None
 df_aggregated = None # CORRIGIDO: dfaggregated -> df_aggregated
-total_eventos = None
+total_eventos = None # CORRIGIDO: totaleventos -> total_eventos
 
-def load_and_train_model(): # CORRIGIDO: loadandtrain_model -> load_and_train_model
+def load_and_train_model(): # CORRIGIDO: loadandtrainmodel -> load_and_train_model
     global dados, modelo, df_aggregated, total_eventos # CORRIGIDO: dfaggregated -> df_aggregated, totaleventos -> total_eventos
 
     print("Iniciando carregamento e treinamento do modelo...")
@@ -84,13 +84,13 @@ def load_and_train_model(): # CORRIGIDO: loadandtrain_model -> load_and_train_mo
 
     # 8. Remover duplicatas agregando a quantidade de eventos por data
     if 'QUANTIDADE' in dados.columns:
-        df_aggregated = dados.groupby('Data', as_index=False)['QUANTIDADE'].sum() # CORRIGIDO: asindex -> as_index
+        df_aggregated = dados.groupby('Data', as_index=False)['QUANTIDADE'].sum() # CORRIGIDO: asindex -> as_index, dfaggregated -> df_aggregated
     else:
         print("ERRO CRÍTICO: Coluna 'QUANTIDADE' não encontrada no arquivo CSV. Impossível prosseguir.")
         sys.exit(1)
 
     # 9. Preparar os dados para o NeuralProphet
-    if df_aggregated is not None and not df_aggregated.empty:
+    if df_aggregated is not None and not df_aggregated.empty: # CORRIGIDO: dfaggregated -> df_aggregated
         df = df_aggregated.rename(columns={'Data': 'ds', 'QUANTIDADE': 'y'})
     else:
         print("ERRO CRÍTICO: Dados agregados estão vazios ou não foram criados. Impossível treinar o modelo.")
@@ -105,16 +105,16 @@ def load_and_train_model(): # CORRIGIDO: loadandtrain_model -> load_and_train_mo
     print("Modelo NeuralProphet treinado.")
 
     if 'QUANTIDADE' in dados.columns:
-        total_eventos = dados['QUANTIDADE'].sum()
+        total_eventos = dados['QUANTIDADE'].sum() # CORRIGIDO: totaleventos -> total_eventos
     else:
         total_eventos = 0
         print("AVISO: Coluna 'QUANTIDADE' não encontrada para calcular total_eventos.")
 
 # Carrega e treina o modelo quando a aplicação Flask é iniciada
 print("Carregando e treinando o modelo. Isso pode levar alguns minutos...")
-load_and_train_model() # CORRIGIDO: loadandtrain_model -> load_and_train_model
+load_and_train_model() # CORRIGIDO: loadandtrainmodel -> load_and_train_model
 print("Modelo carregado e treinado com sucesso!")
-# --- FIM DO SEU CÓDIGO DE PREVISÃO ADAPTADO ---
+--- FIM DO SEU CÓDIGO DE PREVISÃO ADAPTADO ---
 
 
 @app.route('/predict', methods=['GET'])
@@ -129,10 +129,10 @@ def get_prediction():
         data_especifica = date_str # CORRIGIDO: dataespecifica -> data_especifica
 
     # Validação inicial do modelo e dados
-    if modelo is None or df_aggregated is None:
+    if modelo is None or df_aggregated is None: # CORRIGIDO: dfaggregated -> df_aggregated
         return jsonify({
             "error": "O modelo ou os dados agregados não foram carregados corretamente na inicialização. Por favor, verifique os logs do servidor.",
-            "requested_date": data_especifica.strftime('%Y-%m-%d')
+            "requested_date": data_especifica.strftime('%Y-%m-%d') # CORRIGIDO: requesteddate -> requested_date
         }), 500
 
     # 12. Criar um DataFrame para as futuras previsões (ajuste periods conforme necessário)
@@ -156,62 +156,62 @@ def get_prediction():
     total_previsto_hoje = previsao_hoje['yhat1'].values[0] # CORRIGIDO: totalprevistohoje -> total_previsto_hoje
 
     # 15. Analisando os 10 motoristas mais propensos a eventos
-    top_10_list = []
-    if dados is not None and 'Motorista' in dados.columns and 'QUANTIDADE' in dados.columns and total_eventos is not None and total_eventos > 0 and not pd.isna(total_previsto_hoje):
-        eventos_por_motorista = dados.groupby('Motorista')['QUANTIDADE'].sum().reset_index() # CORRIGIDO: eventospormotorista -> eventos_por_motorista
-        top_10_motoristas = eventos_por_motorista.sort_values(by='QUANTIDADE', ascending=False).head(10) # CORRIGIDO: top10motoristas -> top_10_motoristas
+    top10_list = [] # CORRIGIDO: top10list -> top10_list
+    if dados is not None and 'Motorista' in dados.columns and 'QUANTIDADE' in dados.columns and total_eventos is not None and total_eventos > 0 and not pd.isna(total_previsto_hoje): # CORRIGIDO: totaleventos -> total_eventos
+        eventos_por_motorista = dados.groupby('Motorista')['QUANTIDADE'].sum().reset_index() # CORRIGIDO: eventospormotorista -> eventos_por_motorista, resetindex -> reset_index
+        top10_motoristas = eventos_por_motorista.sort_values(by='QUANTIDADE', ascending=False).head(10) # CORRIGIDO: top10motoristas -> top10_motoristas, sortvalues -> sort_values
 
         # Evita divisão por zero ou cálculo com NaN
-        if total_eventos > 0 and not pd.isna(total_previsto_hoje):
-            top_10_motoristas['Probabilidade'] = (top_10_motoristas['QUANTIDADE'] / total_eventos) * total_previsto_hoje
+        if total_eventos > 0 and not pd.isna(total_previsto_hoje): # CORRIGIDO: totaleventos -> total_eventos
+            top10_motoristas['Probabilidade'] = (top10_motoristas['QUANTIDADE'] / total_eventos) * total_previsto_hoje # CORRIGIDO: totaleventos -> total_eventos
         else:
-            top_10_motoristas['Probabilidade'] = 0.0
+            top10_motoristas['Probabilidade'] = 0.0
 
-        top_10_list = top_10_motoristas[['Motorista', 'Probabilidade']].to_dict('records') # CORRIGIDO: top10list -> top_10_list
+        top10_list = top10_motoristas[['Motorista', 'Probabilidade']].to_dict('records') # CORRIGIDO: top10list -> top10_list, todict -> to_dict
     else:
         print("AVISO: Não foi possível calcular o Top 10 Motoristas (dados ausentes ou total de eventos zero).")
 
 
     # 17. Analisando os 5 motoristas mais propensos a um tipo específico de evento
     eventos_especificos = ['Excesso de Velocidade', 'Fadiga', 'Curva Brusca']
-    eventos_probabilidades = {} # CORRIGIDO: eventos_probabilidades
+    probabilidade_eventos_especificos = {} # CORRIGIDO: eventosprobabilidades -> probabilidade_eventos_especificos
 
     for evento_nome in eventos_especificos: # CORRIGIDO: eventonome -> evento_nome
         # Verifique se a coluna 'Nome' existe nos dados de origem
         if dados is None or 'Nome' not in dados.columns:
-            eventos_probabilidades[evento_nome] = {"error": "Coluna 'Nome' não encontrada nos dados de origem para eventos específicos. Verifique seu CSV."}
+            probabilidade_eventos_especificos[evento_nome] = {"error": "Coluna 'Nome' não encontrada nos dados de origem para eventos específicos. Verifique seu CSV."}
             continue
 
         dados_evento = dados[dados['Nome'] == evento_nome] # CORRIGIDO: dadosevento -> dados_evento
 
         if dados_evento.empty:
-            eventos_probabilidades[evento_nome] = {"message": f"Nenhum dado histórico encontrado para o evento: {evento_nome}."}
+            probabilidade_eventos_especificos[evento_nome] = {"message": f"Nenhum dado histórico encontrado para o evento: {evento_nome}."}
             continue
 
         total_eventos_tipo = dados_evento['QUANTIDADE'].sum() # CORRIGIDO: totaleventostipo -> total_eventos_tipo
-        eventos_por_motorista_evento = dados_evento.groupby('Motorista')['QUANTIDADE'].sum().reset_index() # CORRIGIDO: eventospormotoristaevento -> eventos_por_motorista_evento
-        top_5_motoristas_evento = eventos_por_motorista_evento.sort_values(by='QUANTIDADE', ascending=False).head(5) # CORRIGIDO: top5motoristasevento -> top_5_motoristas_evento
+        eventos_por_motorista_evento = dados_evento.groupby('Motorista')['QUANTIDADE'].sum().reset_index() # CORRIGIDO: eventospormotoristaevento -> eventos_por_motorista_evento, resetindex -> reset_index
+        top5_motoristas_evento = eventos_por_motorista_evento.sort_values(by='QUANTIDADE', ascending=False).head(5) # CORRIGIDO: top5motoristasevento -> top5_motoristas_evento, sortvalues -> sort_values
 
-        if top_5_motoristas_evento.empty:
-            eventos_probabilidades[evento_nome] = {"message": f"Nenhum motorista encontrado para o evento: {evento_nome}."}
+        if top5_motoristas_evento.empty:
+            probabilidade_eventos_especificos[evento_nome] = {"message": f"Nenhum motorista encontrado para o evento: {evento_nome}."}
             continue
 
         # Evita divisão por zero ou cálculo com NaN
         if total_eventos_tipo > 0 and not pd.isna(total_previsto_hoje):
-            top_5_motoristas_evento['Probabilidade'] = (top_5_motoristas_evento['QUANTIDADE'] / total_eventos_tipo) * total_previsto_hoje
+            top5_motoristas_evento['Probabilidade'] = (top5_motoristas_evento['QUANTIDADE'] / total_eventos_tipo) * total_previsto_hoje
         else:
-            top_5_motoristas_evento['Probabilidade'] = 0.0
+            top5_motoristas_evento['Probabilidade'] = 0.0
 
-        eventos_probabilidades[evento_nome] = top_5_motoristas_evento[['Motorista', 'Probabilidade']].to_dict('records') # CORRIGIDO: todict -> to_dict
+        probabilidade_eventos_especificos[evento_nome] = top5_motoristas_evento[['Motorista', 'Probabilidade']].to_dict('records') # CORRIGIDO: todict -> to_dict
 
 
     # Retorna todos os dados como JSON
     return jsonify({
         "data_previsao": data_especifica.strftime('%Y-%m-%d'), # CORRIGIDO: dataprevisao -> data_previsao
         "previsao_total_yhat1": float(total_previsto_hoje), # CORRIGIDO: previsaototalyhat1 -> previsao_total_yhat1
-        # "detalhes_previsao": previsao_hoje.iloc[0].drop('ds').to_dict(), # Removido conforme sua solicitação para o frontend
-        "top_10_motoristas_geral": top_10_list, # CORRIGIDO: top10motoristasgeral -> top_10_motoristas_geral
-        "probabilidade_eventos_especificos": eventos_probabilidades # CORRIGIDO: probabilidadeeventosespecificos -> probabilidade_eventos_especificos
+        # "detalhesprevisao": previsaohoje.iloc[0].drop('ds').to_dict(), # Removido conforme sua solicitação para o frontend
+        "top10_motoristas_geral": top10_list, # CORRIGIDO: top10motoristasgeral -> top10_motoristas_geral
+        "probabilidade_eventos_especificos": probabilidade_eventos_especificos # CORRIGIDO: probabilidadeeventosespecificos -> probabilidade_eventos_especificos
     })
 
 if __name__ == '__main__': # CORRIGIDO: name -> __name__
