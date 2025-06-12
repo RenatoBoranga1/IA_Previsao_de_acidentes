@@ -3,24 +3,17 @@ import pandas as pd
 import numpy as np
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-import neuralprophet
-from neuralprophet import NeuralProphet
-import torch
 import sys
-
-# Configurações de torch.serialization se necessário (ajuste aqui conforme original)
-# ...
+from neuralprophet import NeuralProphet
 
 app = Flask(__name__)
 CORS(app)
 
-# Variáveis globais
 dados = None
 modelo = None
 df_aggregated = None
 total_eventos = None
 
-# Função para carregar e treinar modelo
 def load_and_train_model():
     global dados, modelo, df_aggregated, total_eventos
 
@@ -32,7 +25,6 @@ def load_and_train_model():
         print("ERRO CRÍTICO: 'basedadosseguranca.csv' não encontrado.")
         sys.exit(1)
 
-    # Preencher valores ausentes
     if 'Motorista' in dados.columns:
         dados['Motorista'] = dados['Motorista'].fillna(dados['Motorista'].mode()[0])
 
@@ -129,14 +121,11 @@ def get_prediction():
 
     return jsonify({
         "data_previsao": data_especifica.strftime('%Y-%m-%d'),
-        "previsao_total_yhat1": float(total_previsto_hoje),
-        "top10_motoristas_geral": top10list,
-        "probabilidade_eventos_especificos": probabilidade_eventos_especificos
+        "previsaototalyhat1": float(total_previsto_hoje),
+        "top10motoristasgeral": top10list,
+        "probabilidadeeventosespecificos": probabilidade_eventos_especificos
     })
 
-# ---------------------------
-# Endpoint de upload de CSV
-# ---------------------------
 @app.route('/upload_csv', methods=['POST'])
 def upload_csv():
     if 'file' not in request.files:
@@ -149,7 +138,6 @@ def upload_csv():
 
     try:
         file.save(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'basedadosseguranca.csv'))
-        # Após salvar, recarrega a base e o modelo automaticamente!
         load_and_train_model()
         return jsonify({'success': True, 'message': 'Arquivo CSV atualizado e modelo recarregado com sucesso.'})
     except Exception as err:
