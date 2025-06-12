@@ -148,25 +148,41 @@ main, #controls, #resultado, #uploadSection {
   color: #E67E22; /* Laranja Ritmo para destaques */
 }
 
+.centralizado {
+  width: 100%;
+  text-align: center;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
 #previsaoQtd {
   font-size: 1.45rem;
   font-family: 'Poppins', sans-serif;
   color: #010e1b;
   font-weight: 700;
   padding: 0 3px;
+  display: inline-block;
 }
 
 #top10Motoristas {
-  padding-left: 8px;
-  margin-bottom: 12px;
-  list-style: inside decimal;
+  width: 100%;
+  display: inline-block;
+  text-align: center;
+  padding-left: 0;
+  margin: 14px 0 6px 0;
+  list-style: none;
   font-size: 1.06rem;
 }
 
 #top10Motoristas li {
-  margin-bottom: 2px;
+  margin: 2px 0;
+  font-weight: 500;
+  letter-spacing: 0.02rem;
+  text-align: center;
+  color: #010e1b;
 }
 
+/* Ranking por tipo de evento */
 #eventosEspecificos {
   margin-top: 10px;
   display: flex;
