@@ -36,7 +36,9 @@ Copie seu arquivo basedadosseguranca.csv para a pasta do projeto.
 Rodando localmente:
 bashCopiar
 python app_previsao.py
+
 # ou para produção
+
 gunicorn app_previsao:app
 2. Frontend
 •	Edite o arquivo script.js se necessário para apontar para a URL correta do backend (exemplo: https://ia-previsao-ritmo-backend.onrender.com/predict).
