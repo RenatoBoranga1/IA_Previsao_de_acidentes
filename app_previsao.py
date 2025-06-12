@@ -119,11 +119,32 @@ def get_prediction():
             top5motoristas_evento['Probabilidade'] = 0.0
         probabilidade_eventos_especificos[evento_nome] = top5motoristas_evento[['Motorista', 'Probabilidade']].to_dict('records')
 
+    # NEW: Top 5 Locais de Maior Probabilidade
+    top5_localidades_list = []
+    # Verifica se a coluna 'Z' existe e se há dados para calcular
+    if dados is not None and 'Z' in dados.columns and 'QUANTIDADE' in dados.columns and total_eventos > 0:
+        # Agrupa eventos por localidade (coluna 'Z') e soma a quantidade
+        eventos_por_localidade = dados.groupby('Z')['QUANTIDADE'].sum().reset_index()
+        # Ordena e pega as top 5 localidades
+        top5_localidades = eventos_por_localidade.sort_values(by='QUANTIDADE', ascending=False).head(5)
+        # Calcula a probabilidade de cada localidade com base no total previsto
+        top5_localidades['Probabilidade'] = (top5_localidades['QUANTIDADE'] / total_eventos) * total_previsto_hoje
+        # Formata para a lista de dicionários esperada pelo frontend
+        top5_localidades_list = top5_localidades[['Z', 'Probabilidade']].rename(columns={'Z': 'Localidade'}).to_dict('records')
+    elif dados is None or 'Z' not in dados.columns:
+        # Mensagem de erro se a coluna 'Z' não for encontrada
+        top5_localidades_list = [{'message': 'Coluna "Z" (Localidades) não encontrada nos dados para calcular o top 5.'}]
+    else:
+        # Mensagem caso não haja dados ou total_eventos seja zero
+        top5_localidades_list = [{'message': 'Nenhum dado disponível para calcular o top 5 de localidades.'}]
+
+
     return jsonify({
         "data_previsao": data_especifica.strftime('%Y-%m-%d'),
         "previsaototalyhat1": float(total_previsto_hoje),
         "top10motoristasgeral": top10list,
-        "probabilidadeeventosespecificos": probabilidade_eventos_especificos
+        "probabilidadeeventosespecificos": probabilidade_eventos_especificos,
+        "top5localidades": top5_localidades_list # <-- Novo campo na resposta JSON
     })
 
 @app.route('/upload_csv', methods=['POST'])

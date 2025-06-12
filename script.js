@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const previsaoQtdSpan = document.getElementById('previsaoQtd');
   const top10MotoristasOl = document.getElementById('top10Motoristas');
   const eventosEspecificosDiv = document.getElementById('eventosEspecificos');
+  const top5LocaisOl = document.getElementById('top5Locais'); // <-- NEW: Elemento para os locais
   const mensagemErro = document.getElementById('mensagemErro');
 
   // Define a data padrão como amanhã
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dataPrevisaoSpan.textContent = '';
     top10MotoristasOl.innerHTML = '';
     eventosEspecificosDiv.innerHTML = '';
+    top5LocaisOl.innerHTML = ''; // <-- NEW: Limpa a lista de locais
 
     try {
       // Troque aqui a URL para a do seu backend, se necessário
@@ -90,12 +92,32 @@ document.addEventListener('DOMContentLoaded', () => {
         eventosEspecificosDiv.innerHTML = 'Nenhuma probabilidade por tipo de evento disponível.';
       }
 
+      // NEW: Top 5 Locais de Maior Probabilidade
+      top5LocaisOl.innerHTML = ''; // Garante que esteja limpo antes de preencher
+      if (data.top5localidades && data.top5localidades.length > 0) {
+        data.top5localidades.forEach((local) => {
+          const li = document.createElement('li');
+          // Verifica se é uma mensagem de erro/informação ou dados reais
+          if (local.message) {
+              li.textContent = local.message;
+          } else {
+              const probabilidade = local.Probabilidade !== null && local.Probabilidade !== undefined ? local.Probabilidade.toFixed(2).replace('.', ',') + '%' : 'N/A';
+              li.innerHTML = `<span>${local.Localidade}</span> <span class="valor">${probabilidade}</span>`;
+          }
+          top5LocaisOl.appendChild(li);
+        });
+      } else {
+        top5LocaisOl.innerHTML = '<li>Nenhum local encontrado para o top 5.</li>';
+      }
+
+
       // Exibe resultados
       resultadoSection.style.display = 'block';
 
     } catch (error) {
-      mensagemErro.textContent = 'Não foi possível conectar ao servidor de previsão.';
+      mensagemErro.textContent = 'Não foi possível conectar ao servidor de previsão. Verifique a URL do backend ou se o serviço está online.';
       mensagemErro.style.display = 'block';
+      console.error("Erro ao buscar previsão:", error);
     }
   }
 
