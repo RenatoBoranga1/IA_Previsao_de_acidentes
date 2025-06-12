@@ -1,0 +1,232 @@
+/* Importar fonte do Google Fonts (garante que a fonte Poppins seja usada) */
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #F8F8F8; /* Fundo geral claro */
+    color: #010e1b; /* Navy Blue muito escuro para texto principal */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- Header Section --- */
+header {
+    background-color: #072970; /* Navy Blue muito escuro da Ritmo */
+    color: #fff;
+    padding: 1.5rem 0;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.header-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.company-logo {
+    max-height: 80px;
+    margin-bottom: 10px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #E67E22; /* Laranja da Ritmo para o título principal no header */
+}
+
+header p {
+    margin: 0.5rem 0 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* --- Main Content Section --- */
+main {
+    flex-grow: 1;
+    padding: 30px 20px;
+    max-width: 900px;
+    margin: 30px auto;
+    background: #fff; /* Fundo branco para o conteúdo principal */
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+#controls {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #ECEFF1;
+}
+
+#controls label {
+    font-size: 1.2rem;
+    margin-right: 15px;
+    color: #010e1b; /* Navy Blue muito escuro para o label */
+    font-weight: 600;
+}
+
+#controls input[type="date"] {
+    padding: 10px 15px;
+    border: 1px solid #BDC3C7;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    color: #010e1b; /* Navy Blue muito escuro para o texto do input */
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+#controls input[type="date"]:focus {
+    border-color: #E67E22; /* Laranja da Ritmo no foco */
+}
+
+#controls button {
+    padding: 12px 25px;
+    background-color: #E67E22; /* Laranja da Ritmo para o botão */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 15px;
+    box-shadow: 0 4px 8px rgba(230,126,34,0.3); /* Sombra laranja para o botão */
+}
+
+#controls button:hover {
+    background-color: #D35400; /* Laranja mais escuro no hover */
+    transform: translateY(-2px);
+}
+
+/* --- Sections Visibility --- */
+.hidden {
+    display: none;
+}
+
+/* --- Loading Message --- */
+#loading {
+    text-align: center;
+    font-size: 1.3rem;
+    color: #555;
+    padding: 20px;
+    font-weight: 600;
+}
+
+/* --- Prediction Results Section --- */
+#predictionResults h2 {
+    color: #010e1b; /* Navy Blue muito escuro para o título */
+    border-bottom: 3px solid #E67E22; /* Laranja da Ritmo na linha do título */
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.result-card {
+    background-color: #ECF0F1; /* Cinza claro, bom para cards */
+    border-left: 6px solid #E67E22; /* Laranja da Ritmo na borda esquerda */
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.result-card h3 {
+    color: #010e1b; /* Navy Blue muito escuro para o título do card */
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.result-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.result-card ul li {
+    padding: 8px 0;
+    border-bottom: 1px dashed #BDC3C7;
+    font-size: 1.1rem;
+    color: #010e1b; /* Navy Blue muito escuro para o texto da lista */
+}
+
+.result-card ul li:last-child {
+    border-bottom: none;
+}
+
+.result-card p {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #010e1b; /* Navy Blue muito escuro para números importantes */
+}
+
+/* --- Error Display Section --- */
+#errorDisplay {
+    background-color: #FEE;
+    border-left: 6px solid #C0392B;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    color: #C0392B;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.error-title {
+    color: #C0392B;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+#errorDisplay p {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+/* --- Footer Section --- */
+footer {
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 40px;
+    background-color: #010e1b; /* Navy Blue muito escuro da Ritmo */
+    color: #fff;
+    font-size: 0.95rem;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+}
+
+footer p {
+    margin: 0.5rem 0;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    #controls label,
+    #controls input[type="date"],
+    #controls button {
+        display: block;
+        width: calc(100% - 40px);
+        margin: 10px auto;
+    }
+
+    #controls button {
+        margin-top: 20px;
+    }
+
+    main {
+        margin: 20px 10px;
+        padding: 20px;
+    }
+
+    .result-card h3 {
+        font-size: 1.3rem;
+    }
+}
