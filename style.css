@@ -5,8 +5,8 @@ body {
   line-height: 1.6;
   margin: 0;
   padding: 0;
-  background-color: #F8F8F8; /* Fundo geral claro */
-  color: #010e1b; /* Navy Blue muito escuro para texto principal */
+  background-color: #F8F8F8;
+  color: #010e1b;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -14,7 +14,7 @@ body {
 
 /* --- Header Section --- */
 header {
-  background-color: #072970; /* Navy Blue escuro da Ritmo */
+  background-color: #072970;
   color: #fff;
   padding: 2rem 0 1rem 0;
   text-align: center;
@@ -25,7 +25,7 @@ header h1 {
   margin: 0 0 0.5rem 0;
   font-size: 2.6rem;
   font-weight: 700;
-  color: #E67E22; /* Laranja Ritmo para destaque */
+  color: #E67E22;
   letter-spacing: 1px;
   text-shadow: 1px 1px 3px rgba(20,20,20,0.06);
 }
@@ -95,7 +95,7 @@ main, #controls, #resultado, #uploadSection {
 
 #controls button:hover,
 #uploadSection button:hover {
-  background-color: #D35400; /* Laranja mais escuro */
+  background-color: #D35400;
   transform: translateY(-2px) scale(1.03);
 }
 
@@ -145,7 +145,7 @@ main, #controls, #resultado, #uploadSection {
 }
 
 #resultado strong {
-  color: #E67E22; /* Laranja Ritmo para destaques */
+  color: #E67E22;
 }
 
 .centralizado {
@@ -164,25 +164,72 @@ main, #controls, #resultado, #uploadSection {
   display: inline-block;
 }
 
-#top10Motoristas {
-  width: 100%;
-  display: inline-block;
-  text-align: center;
+/* ---- TOP 10 MOTORISTAS PROFISSIONAL ---- */
+.ranking-list {
+  margin: 16px auto 12px auto;
   padding-left: 0;
-  margin: 14px 0 6px 0;
+  width: 100%;
+  max-width: 440px;
   list-style: none;
-  font-size: 1.06rem;
+  counter-reset: motoristacount;
+  text-align: left;
+  background: #f8fafd;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px 0 rgba(7,41,112,0.08);
+  overflow: hidden;
 }
 
-#top10Motoristas li {
-  margin: 2px 0;
+.ranking-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 22px;
+  font-size: 1.08rem;
   font-weight: 500;
-  letter-spacing: 0.02rem;
-  text-align: center;
-  color: #010e1b;
+  border-bottom: 1px solid #F1F1F1;
+  color: #072970;
+  background: #f8fafd;
+  position: relative;
+  min-height: 44px;
 }
 
-/* Ranking por tipo de evento */
+.ranking-list li:last-child {
+  border-bottom: none;
+}
+
+.ranking-list li::before {
+  content: counter(motoristacount) ".";
+  counter-increment: motoristacount;
+  display: inline-block;
+  width: 2em;
+  font-weight: 700;
+  color: #E67E22;
+  font-size: 1.05em;
+  flex-shrink: 0;
+  text-align: right;
+  margin-right: 10px;
+}
+
+.ranking-list li:first-child {
+  background: linear-gradient(to right, #ffe5ca 70%, #f8fafd 100%);
+  font-size: 1.13rem;
+  font-weight: 700;
+}
+
+.ranking-list li:nth-child(2),
+.ranking-list li:nth-child(3) {
+  background: linear-gradient(to right,#f7f2e7 55%, #f8fafd 100%);
+}
+
+.ranking-list li span.valor {
+  font-weight: 700;
+  color: #E67E22;
+  min-width: 58px;
+  text-align: right;
+}
+
+
+/* --- Ranking por tipo de evento --- */
 #eventosEspecificos {
   margin-top: 10px;
   display: flex;
@@ -248,7 +295,7 @@ footer {
   text-align: center;
   padding: 1.5rem 0;
   margin-top: 40px;
-  background-color: #010e1b; /* Navy Blue muito escuro */
+  background-color: #010e1b;
   color: #fff;
   font-size: 0.98rem;
   box-shadow: 0 -3px 8px rgba(0,0,0,0.09);
@@ -290,6 +337,10 @@ footer p {
   .result-card {
     min-width: 172px;
     max-width: 99vw;
+  }
+  .ranking-list li {
+    font-size: 0.98rem;
+    padding: 10px 10px;
   }
 }
 

@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultadoSection = document.getElementById('resultado');
   const dataPrevisaoSpan = document.getElementById('dataPrevisao');
   const previsaoQtdSpan = document.getElementById('previsaoQtd');
-  const top10MotoristasUl = document.getElementById('top10Motoristas');
+  const top10MotoristasOl = document.getElementById('top10Motoristas');
   const eventosEspecificosDiv = document.getElementById('eventosEspecificos');
   const mensagemErro = document.getElementById('mensagemErro');
 
@@ -22,10 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
     mensagemErro.style.display = 'none';
     previsaoQtdSpan.textContent = '';
     dataPrevisaoSpan.textContent = '';
-    top10MotoristasUl.innerHTML = '';
+    top10MotoristasOl.innerHTML = '';
     eventosEspecificosDiv.innerHTML = '';
-
-    // Mostre um loading se desejar
 
     try {
       // Troque aqui a URL para a do seu backend, se necessário
@@ -40,29 +38,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Data de Previsão e Previsão Total
       dataPrevisaoSpan.textContent = data.data_previsao || 'N/A';
-      if (data.previsao_total_yhat1 !== null && data.previsao_total_yhat1 !== undefined) {
-        previsaoQtdSpan.textContent = data.previsao_total_yhat1.toFixed(2);
+      if (data.previsaototalyhat1 !== null && data.previsaototalyhat1 !== undefined) {
+        previsaoQtdSpan.textContent = data.previsaototalyhat1.toFixed(2);
       } else {
         previsaoQtdSpan.textContent = 'N/A';
       }
 
-      // Top 10 Motoristas Geral
-      top10MotoristasUl.innerHTML = '';
-      if (data.top10_motoristas_geral && data.top10_motoristas_geral.length > 0) {
-        data.top10_motoristas_geral.forEach(motorista => {
+      // Top 10 Motoristas Geral (novo estilo)
+      top10MotoristasOl.innerHTML = '';
+      if (data.top10motoristasgeral && data.top10motoristasgeral.length > 0) {
+        data.top10motoristasgeral.forEach((motorista) => {
           const li = document.createElement('li');
-          const probabilidade = motorista.Probabilidade;
-          li.textContent = `${motorista.Motorista}: ${probabilidade !== null && probabilidade !== undefined ? probabilidade.toFixed(2).replace('.', ',') + '%' : 'N/A'}`;
-          top10MotoristasUl.appendChild(li);
+          const probabilidade = motorista.Probabilidade !== null && motorista.Probabilidade !== undefined ? motorista.Probabilidade.toFixed(2).replace('.', ',') + '%' : 'N/A';
+          li.innerHTML = `<span>${motorista.Motorista}</span> <span class="valor">${probabilidade}</span>`;
+          top10MotoristasOl.appendChild(li);
         });
       } else {
-        top10MotoristasUl.innerHTML = '<li>Nenhum motorista encontrado no top 10.</li>';
+        top10MotoristasOl.innerHTML = '<li>Nenhum motorista encontrado no top 10.</li>';
       }
 
       // Probabilidades por Tipo de Evento
       eventosEspecificosDiv.innerHTML = '';
-      if (data.probabilidade_eventos_especificos) {
-        for (const evento in data.probabilidade_eventos_especificos) {
+      if (data.probabilidadeeventosespecificos) {
+        for (const evento in data.probabilidadeeventosespecificos) {
           const eventCard = document.createElement('div');
           eventCard.classList.add('result-card');
           const titulo = document.createElement('strong');
@@ -70,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
           eventCard.appendChild(titulo);
 
           const ul = document.createElement('ul');
-          const eventoData = data.probabilidade_eventos_especificos[evento];
+          const eventoData = data.probabilidadeeventosespecificos[evento];
           if (Array.isArray(eventoData) && eventoData.length > 0) {
             eventoData.forEach(motorista => {
               const li = document.createElement('li');
