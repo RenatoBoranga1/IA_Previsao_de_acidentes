@@ -43,7 +43,7 @@ from flask_cors import CORS # Para permitir que o frontend acesse o backend
 app = Flask(__name__) # CORRIGIDO: name -> __name__
 CORS(app) # Habilita CORS para todas as rotas
 
---- INÍCIO DO SEU CÓDIGO DE PREVISÃO ADAPTADO PARA RODAR UMA VEZ ---
+#--- INÍCIO DO SEU CÓDIGO DE PREVISÃO ADAPTADO PARA RODAR UMA VEZ ---
 # Estas variáveis globais serão carregadas uma vez quando a aplicação iniciar
 dados = None
 modelo = None
@@ -114,7 +114,7 @@ def load_and_train_model(): # CORRIGIDO: loadandtrainmodel -> load_and_train_mod
 print("Carregando e treinando o modelo. Isso pode levar alguns minutos...")
 load_and_train_model() # CORRIGIDO: loadandtrainmodel -> load_and_train_model
 print("Modelo carregado e treinado com sucesso!")
---- FIM DO SEU CÓDIGO DE PREVISÃO ADAPTADO ---
+#--- FIM DO SEU CÓDIGO DE PREVISÃO ADAPTADO ---
 
 
 @app.route('/predict', methods=['GET'])
