@@ -1,66 +1,58 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Previsão de Acidentes - Adapta</title> <!-- Título da página atualizado -->
-    <link rel="stylesheet" href="style.css">
-    <!-- Link para a fonte Poppins do Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>IA Previsão de Eventos Logísticos</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <!-- Mantenha o caminho para a sua imagem de logo aqui. -->
-            <!-- Se a logo for da "Adapta", substitua o arquivo logo_ritmo.png pelo logo da Adapta. -->
-            <img src="logo_ritmo.png" alt="Logo da Empresa" class="company-logo"> <!-- Alt text atualizado para ser mais genérico ou específico para "Adapta" se for o caso -->
-            <h1>Dashboard de Previsão de Eventos</h1> <!-- Título principal do dashboard atualizado -->
-            <p>Desenvolvido por Renato Boranga - IA de Previsão de Acidentes</p> <!-- Subtítulo/crédito atualizado -->
-        </div>
-    </header>
+  <header>
+    <h1>IA Previsão de Eventos Logísticos</h1>
+    <p>Sistema de previsão operacional com inteligência artificial</p>
+  </header>
 
-    <main>
-        <section id="controls">
-            <label for="predictionDate">Selecione a Data da Previsão:</label>
-            <input type="date" id="predictionDate">
-            <button id="fetchDataButton">Obter Previsão</button>
-        </section>
+  <!-- Seção de controle -->
+  <section id="controls">
+    <form id="dateForm">
+      <label for="dateInput">Escolha a data para previsão:</label>
+      <input type="date" id="dateInput" required>
+      <button type="submit" class="btn-buscar">Buscar Previsão</button>
+    </form>
+  </section>
 
-        <section id="loading" class="hidden">
-            <p>Carregando previsão...</p>
-        </section>
+  <!-- Resultado da previsão -->
+  <section id="resultado" style="display:none;">
+    <h2>Previsão para <span id="dataPrevisao"></span></h2>
+    <div>
+      <strong>Quantidade prevista de eventos:</strong>
+      <span id="previsaoQtd"></span>
+    </div>
+    <div>
+      <strong>Top 10 Motoristas (Geral):</strong>
+      <ul id="top10Motoristas"></ul>
+    </div>
+    <div>
+      <strong>Ranking por Tipo de Evento:</strong>
+      <div id="eventosEspecificos"></div>
+    </div>
+  </section>
 
-        <section id="predictionResults" class="hidden">
-            <h2>Previsão para <span id="dataPrevisao"></span></h2>
+  <section id="mensagemErro" style="display:none;color:#e74c3c;"></section>
 
-            <div class="result-card">
-                <h3>Total de Eventos Previstos</h3>
-                <p id="totalPrevistoHoje"></p>
-            </div>
+  <!-- Botão de upload da base de dados -->
+  <section id="uploadSection">
+    <h2>Atualizar Base de Dados (.csv)</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" id="csvFileInput" name="file" accept=".csv" required>
+      <button type="submit" class="btn-upload">Atualizar base de dados</button>
+    </form>
+    <p id="uploadStatus"></p>
+  </section>
 
-            <div class="result-card">
-                <h3>Top 10 Motoristas Mais Propensos a Eventos Gerais</h3>
-                <ul id="top10MotoristasGeral"></ul>
-            </div>
+  <footer>
+    <p>&copy; 2024 Ritmo Logística • IA Previsão de Eventos</p>
+  </footer>
 
-            <div class="result-card">
-                <h3>Probabilidade por Tipo de Evento</h3>
-                <div id="eventosEspecificos"></div>
-            </div>
-        </section>
-
-        <section id="errorDisplay" class="hidden">
-            <h2 class="error-title">Erro na Previsão</h2>
-            <p id="errorMessage"></p>
-            <p id="errorDetails"></p>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 Adapta. Todos os direitos reservados.</p> <!-- Copyright atualizado -->
-        <p>Dados baseados em registros de segurança da frota.</p>
-    </footer>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
