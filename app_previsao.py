@@ -1,20 +1,20 @@
 import pandas as pd
 import numpy as np
 
-# Importações não utilizadas no backend, mas mantidas se houver planos futuros:
-import matplotlib.pyplot as plt
-import seaborn as sns
-from termcolor import colored
+# Removidas importações não utilizadas no backend para evitar ModuleNotFoundError
+# import matplotlib.pyplot as plt
+# import seaborn as sns
+# from termcolor import colored
 
 import neuralprophet
 from neuralprophet import NeuralProphet
 import torch
 import sys # Importado para sys.exit() em caso de erros críticos
 
-# Suas configurações de safe_globals - CORRIGIDO: addsafeglobals -> addsafe_globals
+# Suas configurações de safe_globals - CORRIGIDO: addsafeglobals -> add_safe_globals
 # Mantidas as entradas específicas de numpy.dtypes conforme seu código original,
 # pois o NeuralProphet pode ter requisitos específicos para isso.
-torch.serialization.add_safe_globals([
+torch.serialization.add_safe_globals([ # CORRIGIDO: addsafeglobals -> add_safe_globals
     neuralprophet.configure.ConfigSeasonality,
     neuralprophet.configure.Season,
     neuralprophet.configure.Train,
@@ -29,8 +29,8 @@ torch.serialization.add_safe_globals([
     neuralprophet.configure.AR,
     neuralprophet.configure.Normalization,
     neuralprophet.df_utils.ShiftScale,
-    pd._libs.tslibs.timestamps._unpickle_timestamp, # CORRIGIDO: pd.libs -> pd._libs e ._unpickle_timestamp
-    pd._libs.tslibs.timedeltas._timedelta_unpickle, # CORRIGIDO: pd.libs -> pd._libs e ._timedelta_unpickle
+    pd._libs.tslibs.timestamps._unpickle_timestamp, # CORRIGIDO: pd.libs -> pd._libs e _unpickle_timestamp
+    pd._libs.tslibs.timedeltas._timedelta_unpickle, # CORRIGIDO: pd.libs -> pd._libs e _timedelta_unpickle
     np.core.multiarray.scalar,
     np.dtypes.Int64DType,
     neuralprophet.configure.ConfigFutureRegressors
@@ -43,7 +43,7 @@ from flask_cors import CORS # Para permitir que o frontend acesse o backend
 app = Flask(__name__) # CORRIGIDO: name -> __name__
 CORS(app) # Habilita CORS para todas as rotas
 
-#--- INÍCIO DO SEU CÓDIGO DE PREVISÃO ADAPTADO PARA RODAR UMA VEZ ---
+# --- INÍCIO DO SEU CÓDIGO DE PREVISÃO ADAPTADO PARA RODAR UMA VEZ ---
 # Estas variáveis globais serão carregadas uma vez quando a aplicação iniciar
 dados = None
 modelo = None
@@ -114,7 +114,7 @@ def load_and_train_model(): # CORRIGIDO: loadandtrainmodel -> load_and_train_mod
 print("Carregando e treinando o modelo. Isso pode levar alguns minutos...")
 load_and_train_model() # CORRIGIDO: loadandtrainmodel -> load_and_train_model
 print("Modelo carregado e treinado com sucesso!")
-#--- FIM DO SEU CÓDIGO DE PREVISÃO ADAPTADO ---
+# --- FIM DO SEU CÓDIGO DE PREVISÃO ADAPTADO ---
 
 
 @app.route('/predict', methods=['GET'])
@@ -136,7 +136,7 @@ def get_prediction():
         }), 500
 
     # 12. Criar um DataFrame para as futuras previsões (ajuste periods conforme necessário)
-    futuro = modelo.make_future_dataframe(df_aggregated.rename(columns={'Data': 'ds', 'QUANTIDADE': 'y'}), periods=30) # CORRIGIDO: makefuturedataframe -> make_future_dataframe
+    futuro = modelo.make_future_dataframe(df_aggregated.rename(columns={'Data': 'ds', 'QUANTIDADE': 'y'}), periods=30) # CORRIGIDO: makefuturedataframe -> make_future_dataframe, dfaggregated -> df_aggregated
 
     # 13. Fazer a previsão
     previsao = modelo.predict(futuro)
@@ -173,8 +173,8 @@ def get_prediction():
 
 
     # 17. Analisando os 5 motoristas mais propensos a um tipo específico de evento
+    probabilidade_eventos_especificos = {} # CORRIGIDO: probabilidadeeventosespecificos -> probabilidade_eventos_especificos
     eventos_especificos = ['Excesso de Velocidade', 'Fadiga', 'Curva Brusca']
-    probabilidade_eventos_especificos = {} # CORRIGIDO: eventosprobabilidades -> probabilidade_eventos_especificos
 
     for evento_nome in eventos_especificos: # CORRIGIDO: eventonome -> evento_nome
         # Verifique se a coluna 'Nome' existe nos dados de origem
@@ -209,7 +209,7 @@ def get_prediction():
     return jsonify({
         "data_previsao": data_especifica.strftime('%Y-%m-%d'), # CORRIGIDO: dataprevisao -> data_previsao
         "previsao_total_yhat1": float(total_previsto_hoje), # CORRIGIDO: previsaototalyhat1 -> previsao_total_yhat1
-        # "detalhesprevisao": previsaohoje.iloc[0].drop('ds').to_dict(), # Removido conforme sua solicitação para o frontend
+        # "detalhesprevisao": previsao_hoje.iloc[0].drop('ds').to_dict(), # Removido conforme sua solicitação para o frontend
         "top10_motoristas_geral": top10_list, # CORRIGIDO: top10motoristasgeral -> top10_motoristas_geral
         "probabilidade_eventos_especificos": probabilidade_eventos_especificos # CORRIGIDO: probabilidadeeventosespecificos -> probabilidade_eventos_especificos
     })
