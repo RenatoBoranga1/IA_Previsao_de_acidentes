@@ -1,4 +1,4 @@
-#IA Previsão de Eventos 
+# IA Previsão de Eventos 
 
 Este sistema realiza previsão de eventos (operações/logística) utilizando um modelo de séries temporais com NeuralProphet. Ele conta com uma API RESTful (Flask), frontend web responsivo e deploy em nuvem via Render.
 ________________________________________
