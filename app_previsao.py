@@ -4,6 +4,73 @@ import numpy as np
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import sys
+
+# Importações de módulos necessários para os safe_globals
+import torch.serialization
+import neuralprophet.configure
+import neuralprophet.df_utils
+import torch.nn
+import torch.optim
+import torch.optim.lr_scheduler
+
+# === NOVO BLOCO: Importações e adição de funções internas do Pandas ===
+pandas_unpickle_timestamp = None
+pandas_timedelta_unpickle = None
+
+# Tenta importar _unpickle_timestamp
+try:
+    import pandas._libs.tslibs.timestamps as timestamps_lib
+    # Aqui, a função é _unpickle_timestamp
+    pandas_unpickle_timestamp = timestamps_lib._unpickle_timestamp
+    print("Sucesso ao importar pandas._libs.tslibs.timestamps._unpickle_timestamp.")
+except (ImportError, AttributeError) as e:
+    print(f"Aviso: Não foi possível importar pandas._libs.tslibs.timestamps._unpickle_timestamp. Erro: {e}")
+
+# Tenta importar _timedelta_unpickle
+try:
+    import pandas._libs.tslibs.timedeltas as timedeltas_lib
+    # *** CORREÇÃO AQUI: A função é _timedelta_unpickle (com sublinhado inicial) ***
+    pandas_timedelta_unpickle = timedeltas_lib._timedelta_unpickle
+    print("Sucesso ao importar pandas._libs.tslibs.timedeltas._timedelta_unpickle.")
+except (ImportError, AttributeError) as e:
+    print(f"Aviso: Não foi possível importar pandas._libs.tslibs.timedeltas._timedelta_unpickle. Erro: {e}")
+# === FIM DO NOVO BLOCO ===
+
+
+# Lista COMPLETA e unificada de todos os "globais" do NeuralProphet e outros módulos
+# que precisam ser permitidos pelo PyTorch para desserialização segura.
+SAFE_NEURALPROPHET_GLOBALS = [
+    neuralprophet.configure.ConfigSeasonality,
+    neuralprophet.configure.Season,
+    neuralprophet.configure.Train,
+    torch.nn.modules.loss.SmoothL1Loss,
+    torch.optim.AdamW,
+    torch.optim.lr_scheduler.OneCycleLR,
+    neuralprophet.configure.Trend,
+    np.core.multiarray._reconstruct,
+    np.ndarray,
+    np.dtype,
+    np.dtypes.Float64DType,
+    neuralprophet.configure.AR,
+    neuralprophet.configure.Normalization,
+    neuralprophet.df_utils.ShiftScale,
+    np.core.multiarray.scalar,
+    np.dtypes.Int64DType,
+    neuralprophet.configure.ConfigFutureRegressors
+]
+
+# Adiciona as funções do Pandas à lista de safe_globals, SE foram importadas com sucesso
+if pandas_unpickle_timestamp:
+    SAFE_NEURALPROPHET_GLOBALS.append(pandas_unpickle_timestamp)
+if pandas_timedelta_unpickle:
+    SAFE_NEURALPROPHET_GLOBALS.append(pandas_timedelta_unpickle)
+
+
+# Adicione esses globais à lista de confiança do PyTorch (apenas se a função existir, para compatibilidade)
+if hasattr(torch.serialization, 'add_safe_globals'):
+    torch.serialization.add_safe_globals(SAFE_NEURALPROPHET_GLOBALS)
+
+# Agora, importe o NeuralProphet (DEPOIS das configurações acima)
 from neuralprophet import NeuralProphet
 
 app = Flask(__name__)
@@ -119,32 +186,24 @@ def get_prediction():
             top5motoristas_evento['Probabilidade'] = 0.0
         probabilidade_eventos_especificos[evento_nome] = top5motoristas_evento[['Motorista', 'Probabilidade']].to_dict('records')
 
-    # NEW: Top 5 Locais de Maior Probabilidade
+    # Top 5 Locais de Maior Probabilidade
     top5_localidades_list = []
-    # Verifica se a coluna 'Z' existe e se há dados para calcular
     if dados is not None and 'Z' in dados.columns and 'QUANTIDADE' in dados.columns and total_eventos > 0:
-        # Agrupa eventos por localidade (coluna 'Z') e soma a quantidade
         eventos_por_localidade = dados.groupby('Z')['QUANTIDADE'].sum().reset_index()
-        # Ordena e pega as top 5 localidades
         top5_localidades = eventos_por_localidade.sort_values(by='QUANTIDADE', ascending=False).head(5)
-        # Calcula a probabilidade de cada localidade com base no total previsto
         top5_localidades['Probabilidade'] = (top5_localidades['QUANTIDADE'] / total_eventos) * total_previsto_hoje
-        # Formata para a lista de dicionários esperada pelo frontend
         top5_localidades_list = top5_localidades[['Z', 'Probabilidade']].rename(columns={'Z': 'Localidade'}).to_dict('records')
     elif dados is None or 'Z' not in dados.columns:
-        # Mensagem de erro se a coluna 'Z' não for encontrada
         top5_localidades_list = [{'message': 'Coluna "Z" (Localidades) não encontrada nos dados para calcular o top 5.'}]
     else:
-        # Mensagem caso não haja dados ou total_eventos seja zero
         top5_localidades_list = [{'message': 'Nenhum dado disponível para calcular o top 5 de localidades.'}]
-
 
     return jsonify({
         "data_previsao": data_especifica.strftime('%Y-%m-%d'),
         "previsaototalyhat1": float(total_previsto_hoje),
         "top10motoristasgeral": top10list,
         "probabilidadeeventosespecificos": probabilidade_eventos_especificos,
-        "top5localidades": top5_localidades_list # <-- Novo campo na resposta JSON
+        "top5localidades": top5_localidades_list
     })
 
 @app.route('/upload_csv', methods=['POST'])
