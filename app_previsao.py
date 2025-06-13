@@ -188,15 +188,20 @@ def get_prediction():
 
     # Top 5 Locais de Maior Probabilidade
     top5_localidades_list = []
-    if dados is not None and 'Z' in dados.columns and 'QUANTIDADE' in dados.columns and total_eventos > 0:
-        eventos_por_localidade = dados.groupby('Z')['QUANTIDADE'].sum().reset_index()
+    # --- INÍCIO DA ALTERAÇÃO ---
+    # Coluna 'Localidade' está sendo usada em vez de 'Z'
+    if dados is not None and 'Localidade' in dados.columns and 'QUANTIDADE' in dados.columns and total_eventos > 0:
+        eventos_por_localidade = dados.groupby('Localidade')['QUANTIDADE'].sum().reset_index()
         top5_localidades = eventos_por_localidade.sort_values(by='QUANTIDADE', ascending=False).head(5)
         top5_localidades['Probabilidade'] = (top5_localidades['QUANTIDADE'] / total_eventos) * total_previsto_hoje
-        top5_localidades_list = top5_localidades[['Z', 'Probabilidade']].rename(columns={'Z': 'Localidade'}).to_dict('records')
-    elif dados is None or 'Z' not in dados.columns:
-        top5_localidades_list = [{'message': 'Coluna "Z" (Localidades) não encontrada nos dados para calcular o top 5.'}]
+        # Não é mais necessário renomear a coluna, pois ela já se chama 'Localidade'
+        top5_localidades_list = top5_localidades[['Localidade', 'Probabilidade']].to_dict('records')
+    # A mensagem de erro também foi atualizada para refletir 'Localidade'
+    elif dados is None or 'Localidade' not in dados.columns:
+        top5_localidades_list = [{'message': 'Coluna "Localidade" não encontrada nos dados para calcular o top 5.'}]
     else:
         top5_localidades_list = [{'message': 'Nenhum dado disponível para calcular o top 5 de localidades.'}]
+    # --- FIM DA ALTERAÇÃO ---
 
     return jsonify({
         "data_previsao": data_especifica.strftime('%Y-%m-%d'),
