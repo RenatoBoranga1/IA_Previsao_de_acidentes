@@ -49,28 +49,44 @@ dados = None
 modelo = None
 df_aggregated = None
 total_eventos = None
+motoristas_desligados_list = [] # NOVA VARIÁVEL GLOBAL
 
 def load_and_train_model():
-    global dados, modelo, df_aggregated, total_eventos
+    global dados, modelo, df_aggregated, total_eventos, motoristas_desligados_list
 
     print("Iniciando carregamento e treinamento do modelo...")
 
-    # 2. Carregar dados
+    # 2. Carregar dados principais
     try:
-        # Certifique-se de que 'basedadosseguranca.csv' está na mesma pasta ou forneça o caminho completo
         dados = pd.read_csv('basedadosseguranca.csv', delimiter=';')
     except FileNotFoundError:
         print("ERRO CRÍTICO: 'basedadosseguranca.csv' não encontrado. Certifique-se de que o arquivo está na pasta correta.")
         sys.exit(1) # Sai do programa se o arquivo de dados não for encontrado
 
+    # NOVO: Carregar motoristas desligados
+    try:
+        desligados_df = pd.read_csv('motoristas_desligados.csv', delimiter=';')
+        if 'Motorista' in desligados_df.columns:
+            motoristas_desligados_list = desligados_df['Motorista'].tolist()
+            print(f"INFO: {len(motoristas_desligados_list)} motoristas desligados carregados.")
+        else:
+            print("AVISO: 'motoristas_desligados.csv' encontrado, mas não contém a coluna 'Motorista'. Nenhum motorista será filtrado.")
+            motoristas_desligados_list = []
+    except FileNotFoundError:
+        print("AVISO: 'motoristas_desligados.csv' não encontrado. Nenhum motorista será filtrado como desligado.")
+        motoristas_desligados_list = []
+    except Exception as e:
+        print(f"ERRO ao carregar 'motoristas_desligados.csv': {e}. Nenhum motorista será filtrado.")
+        motoristas_desligados_list = []
+
+
     # 4. Verificar e preencher valores ausentes
     if 'Motorista' in dados.columns:
-        # Usar .iloc[0] para pegar o primeiro elemento da mode() que retorna uma Series
         dados['Motorista'] = dados['Motorista'].fillna(dados['Motorista'].mode().iloc[0])
     else:
         print("AVISO: Coluna 'Motorista' não encontrada. Preenchimento de N/A para motoristas pode ser afetado.")
 
-    # NOVO: Verificar e preencher valores ausentes na coluna 'Localidade'
+    # Verificar e preencher valores ausentes na coluna 'Localidade'
     if 'Localidade' in dados.columns:
         dados['Localidade'] = dados['Localidade'].fillna('Desconhecida') # Preenche com um valor padrão
     else:
@@ -196,7 +212,17 @@ def get_prediction():
     # Verifica se os dados necessários estão presentes e não vazios
     if dados is not None and not dados.empty and 'Motorista' in dados.columns and 'QUANTIDADE' in dados.columns and total_eventos is not None and total_eventos > 0 and not pd.isna(total_previsto_hoje):
         eventos_por_motorista = dados.groupby('Motorista')['QUANTIDADE'].sum().reset_index()
-        top_10_motoristas = eventos_por_motorista.sort_values(by='QUANTIDADE', ascending=False).head(10)
+        top_10_motoristas = eventos_por_motorista.sort_values(by='QUANTIDADE', ascending=False) # Não filtra com head(10) ainda
+
+        # NOVO: FILTRAR MOTORISTAS DESLIGADOS
+        if motoristas_desligados_list: # Verifica se a lista de desligados não está vazia
+            top_10_motoristas = top_10_motoristas[~top_10_motoristas['Motorista'].isin(motoristas_desligados_list)]
+            print(f"INFO: Motoristas desligados filtrados do top motoristas geral.")
+        else:
+            print("INFO: Nenhum motorista desligado para filtrar do top motoristas geral.")
+
+        # Agora aplica o head(10) após o filtro
+        top_10_motoristas = top_10_motoristas.head(10)
 
         # Evita divisão por zero ou cálculo com NaN
         if total_eventos > 0 and not pd.isna(total_previsto_hoje):
@@ -227,10 +253,21 @@ def get_prediction():
 
         total_eventos_tipo = dados_evento['QUANTIDADE'].sum()
         eventos_por_motorista_evento = dados_evento.groupby('Motorista')['QUANTIDADE'].sum().reset_index()
-        top_5_motoristas_evento = eventos_por_motorista_evento.sort_values(by='QUANTIDADE', ascending=False).head(5)
+        top_5_motoristas_evento = eventos_por_motorista_evento.sort_values(by='QUANTIDADE', ascending=False) # Não filtra com head(5) ainda
+
+        # NOVO: FILTRAR MOTORISTAS DESLIGADOS PARA EVENTOS ESPECÍFICOS
+        if motoristas_desligados_list:
+            top_5_motoristas_evento = top_5_motoristas_evento[~top_5_motoristas_evento['Motorista'].isin(motoristas_desligados_list)]
+            print(f"INFO: Motoristas desligados filtrados do top 5 de '{evento_nome}'.")
+        else:
+            print(f"INFO: Nenhum motorista desligado para filtrar do top 5 de '{evento_nome}'.")
+
+        # Agora aplica o head(5) após o filtro
+        top_5_motoristas_evento = top_5_motoristas_evento.head(5)
+
 
         if top_5_motoristas_evento.empty:
-            eventos_probabilidades[evento_nome] = {"message": f"Nenhum motorista encontrado para o evento: {evento_nome}."}
+            eventos_probabilidades[evento_nome] = {"message": f"Nenhum motorista encontrado para o evento: {evento_nome} após filtro de desligados."}
             continue
 
         # Evita divisão por zero ou cálculo com NaN
@@ -266,7 +303,7 @@ def get_prediction():
         "previsao_total_yhat1": float(total_previsto_hoje),
         "top_10_motoristas_geral": top_10_list,
         "probabilidade_eventos_especificos": eventos_probabilidades,
-        "top_3_localidades": top_3_localidades_list # Adicionado ao JSON
+        "top_3_localidades": top_3_localidades_list
     })
 
 if __name__ == '__main__':
