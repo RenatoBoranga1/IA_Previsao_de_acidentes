@@ -75,3 +75,80 @@
     <script src="script.js"></script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previsão de Eventos - Adapta</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="logo_ritmo.png" alt="Logo da Adapta" class="company-logo">
+            <h1>Dashboard de Previsão de Eventos</h1>
+            <p>Desenvolvido por Renato Boranga - IA de Previsão de Acidentes</p>
+        </div>
+    </header>
+
+    <main>
+        <section id="controls">
+            <label for="predictionDate">Selecione a Data da Previsão:</label>
+            <input type="date" id="predictionDate">
+            <button id="fetchDataButton">Obter Previsão</button>
+        </section>
+
+        <section id="loading" class="hidden">
+            <p>Carregando previsão...</p>
+        </section>
+
+        <section id="predictionResults" class="hidden">
+            <!-- Cartão principal com a data e o total previsto -->
+            <div class="main-summary-card result-card">
+                <h3>Previsão para <span id="dataPrevisao"></span></h3>
+                <p>Total de Eventos Previstos</p>
+                <p class="main-prediction-number" id="totalPrevistoHoje"></p>
+            </div>
+
+            <!-- Grid para Top Motoristas (Top 3 e 4-10 lado a lado) -->
+            <div class="drivers-grid-container">
+                <div class="result-card top-drivers-emphasis-card">
+                    <h3>Top 3 Motoristas Mais Propensos</h3>
+                    <ul id="top3MotoristasDestaque"></ul>
+                </div>
+                <div class="result-card other-top-drivers-card">
+                    <h3>Outros Motoristas (4º ao 10º)</h3>
+                    <ul id="top10MotoristasGeral"></ul>
+                </div>
+            </div>
+
+            <!-- Grid para Probabilidades (Eventos e Localidades lado a lado) -->
+            <div class="probabilities-grid-container">
+                <div class="result-card event-probabilities-gradient-card">
+                    <h3>Probabilidade por Tipo de Evento</h3>
+                    <div id="eventosEspecificos"></div>
+                </div>
+                <div class="result-card location-probabilities-gradient-card">
+                    <h3>Probabilidade por Localidade</h3>
+                    <ul id="top3Localidades"></ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="errorDisplay" class="hidden">
+            <h2 class="error-title">Erro na Previsão</h2>
+            <p id="errorMessage"></p>
+            <p id="errorDetails"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Boranga. Todos os direitos reservados.</p>
+        <p>Dados baseados em registros de segurança da frota.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
