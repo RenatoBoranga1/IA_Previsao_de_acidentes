@@ -1,66 +1,74 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>IA Previsão de Eventos Logísticos</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previsão de Acidentes - Adapta</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>IA Previsão de Eventos Logísticos</h1>
-    <p>Sistema de previsão operacional com inteligência artificial</p>
-  </header>
+    <header>
+        <div class="header-content">
+            <img src="logo_ritmo.png" alt="Logo da Empresa" class="company-logo">
+            <h1>Dashboard de Previsão de Eventos</h1>
+            <p>Desenvolvido por Renato Boranga - IA de Previsão de Acidentes</p>
+        </div>
+    </header>
 
-  <!-- Controle de Data -->
-  <section id="controls">
-    <form id="dateForm">
-      <label for="dateInput">Escolha a data para previsão:</label>
-      <input type="date" id="dateInput" required>
-      <button type="submit" class="btn-buscar">Buscar Previsão</button>
-    </form>
-  </section>
+    <main>
+        <section id="controls">
+            <label for="predictionDate">Selecione a Data da Previsão:</label>
+            <input type="date" id="predictionDate">
+            <button id="fetchDataButton">Obter Previsão</button>
+        </section>
 
-  <!-- Resultado da previsão -->
-  <section id="resultado" style="display:none;">
-    <h2>Previsão para <span id="dataPrevisao"></span></h2>
+        <section id="loading" class="hidden">
+            <p>Carregando previsão...</p>
+        </section>
 
-    <div class="centralizado">
-      <strong>Quantidade prevista de eventos:</strong>
-      <span id="previsaoQtd"></span>
-    </div>
-    <div class="centralizado">
-      <strong>Top 10 Motoristas (Geral):</strong>
-      <ol id="top10Motoristas" class="ranking-list"></ol>
-    </div>
-    <div>
-      <strong>Ranking por Tipo de Evento:</strong>
-      <div id="eventosEspecificos"></div>
-    </div>
-    
-    <!-- NEW: Seção para Top 5 Locais de Maior Probabilidade -->
-    <div class="centralizado">
-      <strong>Top 5 Locais de Maior Probabilidade:</strong>
-      <ol id="top5Locais" class="ranking-list"></ol>
-    </div>
+        <section id="predictionResults" class="hidden">
+            <h2>Previsão para <span id="dataPrevisao"></span></h2>
 
-  </section>
+            <div class="prediction-summary-grid">
+                <!-- Novo card para o Total de Eventos Previstos -->
+                <div class="result-card total-events-card">
+                    <h3>Total de Eventos Previstos</h3>
+                    <p id="totalPrevistoHoje"></p>
+                </div>
 
-  <section id="mensagemErro" style="display:none;color:#e74c3c;"></section>
+                <!-- Novo card para os Top 3 Motoristas em Destaque -->
+                <div class="result-card top-drivers-emphasis-card">
+                    <h3>Top 3 Motoristas em Destaque</h3>
+                    <ul id="top3MotoristasDestaque"></ul>
+                </div>
+            </div>
 
-  <!-- Botão de upload da base de dados -->
-  <section id="uploadSection">
-    <h2>Atualizar Base de Dados (.csv)</h2>
-    <form id="uploadForm" enctype="multipart/form-data">
-      <input type="file" id="csvFileInput" name="file" accept=".csv" required>
-      <button type="submit" class="btn-upload">Atualizar base de dados</button>
-    </form>
-    <p id="uploadStatus"></p>
-  </section>
+            <!-- Card para os outros motoristas (do 4º ao 10º) -->
+            <div class="result-card other-top-drivers-card">
+                <h3>Outros Motoristas (Top 4-10)</h3>
+                <ul id="top10MotoristasGeral"></ul>
+            </div>
 
-  <footer>
-    <p>&copy; 2024 Ritmo Logística • IA Previsão de Eventos</p>
-  </footer>
+            <!-- Card para Probabilidade por Tipo de Evento com gradiente -->
+            <div class="result-card event-probabilities-gradient-card">
+                <h3>Probabilidade por Tipo de Evento</h3>
+                <div id="eventosEspecificos"></div>
+            </div>
+        </section>
 
-  <script src="script.js"></script>
+        <section id="errorDisplay" class="hidden">
+            <h2 class="error-title">Erro na Previsão</h2>
+            <p id="errorMessage"></p>
+            <p id="errorDetails"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Adapta. Todos os direitos reservados.</p>
+        <p>Dados baseados em registros de segurança da frota.</p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
