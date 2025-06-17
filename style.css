@@ -1,358 +1,339 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
+/* Importar fonte do Google Fonts (garante que a fonte Poppins seja usada) */
 body {
-  font-family: 'Poppins', sans-serif;
-  line-height: 1.6;
-  margin: 0;
-  padding: 0;
-  background-color: #F8F8F8;
-  color: #010e1b;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #F8F8F8; /* Fundo geral claro */
+    color: #010e1b; /* Navy Blue muito escuro para texto principal */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 /* --- Header Section --- */
 header {
-  background-color: #072970;
-  color: #fff;
-  padding: 2rem 0 1rem 0;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    background-color: #072970; /* Navy Blue muito escuro da Ritmo */
+    color: #fff;
+    padding: 1.5rem 0;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.header-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.company-logo {
+    max-height: 80px;
+    margin-bottom: 10px;
 }
 
 header h1 {
-  margin: 0 0 0.5rem 0;
-  font-size: 2.6rem;
-  font-weight: 700;
-  color: #E67E22;
-  letter-spacing: 1px;
-  text-shadow: 1px 1px 3px rgba(20,20,20,0.06);
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #E67E22; /* Laranja da Ritmo para o título principal no header */
 }
 
 header p {
-  margin: 0;
-  font-size: 1.15rem;
-  opacity: 0.93;
-  letter-spacing: 0.5px;
+    margin: 0.5rem 0 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
 }
 
 /* --- Main Content Section --- */
-main, #controls, #resultado, #uploadSection {
-  width: 100%;
-  max-width: 900px;
-  margin: 25px auto 0 auto;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 2px 24px 0 rgba(15, 23, 42, .07);
-  padding: 30px 25px;
-  box-sizing: border-box;
+main {
+    flex-grow: 1;
+    padding: 30px 20px;
+    max-width: 900px;
+    margin: 30px auto;
+    background: #fff; /* Fundo branco para o conteúdo principal */
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
 #controls {
-  text-align: center;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #ECEFF1;
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #ECEFF1;
 }
 
 #controls label {
-  font-size: 1.2rem;
-  margin-right: 15px;
-  color: #010e1b;
-  font-weight: 600;
+    font-size: 1.2rem;
+    margin-right: 15px;
+    color: #010e1b; /* Navy Blue muito escuro para o label */
+    font-weight: 600;
 }
 
 #controls input[type="date"] {
-  padding: 10px 17px;
-  border: 1px solid #BDC3C7;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  color: #010e1b;
-  outline: none;
-  transition: border-color 0.3s;
+    padding: 10px 15px;
+    border: 1px solid #BDC3C7;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    color: #010e1b; /* Navy Blue muito escuro para o texto do input */
+    outline: none;
+    transition: border-color 0.3s ease;
 }
 
 #controls input[type="date"]:focus {
-  border-color: #E67E22;
+    border-color: #E67E22; /* Laranja da Ritmo no foco */
 }
 
-#controls button,
-#uploadSection button {
-  padding: 12px 25px;
-  background-color: #E67E22;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.08rem;
-  font-weight: 600;
-  margin-left: 15px;
-  margin-bottom: 5px;
-  transition: background-color 0.2s, transform 0.18s;
-  box-shadow: 0 3px 8px rgba(230,126,34,0.14);
+#controls button {
+    padding: 12px 25px;
+    background-color: #E67E22; /* Laranja da Ritmo para o botão */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 15px;
+    box-shadow: 0 4px 8px rgba(230,126,34,0.3); /* Sombra laranja para o botão */
 }
 
-#controls button:hover,
-#uploadSection button:hover {
-  background-color: #D35400;
-  transform: translateY(-2px) scale(1.03);
+#controls button:hover {
+    background-color: #D35400; /* Laranja mais escuro no hover */
+    transform: translateY(-2px);
 }
 
-/* --- Upload Section --- */
-#uploadSection {
-  margin-top: 30px;
-  padding: 22px 24px 18px 24px;
-  border-top: 1.5px solid #ECEFF1;
-  text-align: left;
+/* --- Sections Visibility --- */
+.hidden {
+    display: none;
 }
 
-#uploadSection h2 {
-  color: #010e1b;
-  font-size: 1.32rem;
-  margin-bottom: 13px;
+/* --- Loading Message --- */
+#loading {
+    text-align: center;
+    font-size: 1.3rem;
+    color: #555;
+    padding: 20px;
+    font-weight: 600;
 }
 
-#uploadSection input[type="file"] {
-  border: 1px solid #BDC3C7;
-  border-radius: 7px;
-  padding: 7px 8px;
-  font-size: 1rem;
-  margin-right: 12px;
+/* --- Prediction Results Section --- */
+#predictionResults h2 {
+    color: #010e1b; /* Navy Blue muito escuro para o título */
+    border-bottom: 3px solid #E67E22; /* Laranja da Ritmo na linha do título */
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    font-size: 2rem;
+    font-weight: 700;
 }
 
-/* Status feedback */
-#uploadStatus {
-  margin: 13px 0 0 1px;
-  font-size: 1.05rem;
-  font-weight: 500;
-  min-height: 20px;
-}
-
-/* --- Resultado da previsão --- */
-#resultado {
-  margin-top: 20px;
-  display: none;
-}
-
-#resultado h2 {
-  color: #010e1b;
-  border-bottom: 2.5px solid #E67E22;
-  padding-bottom: 9px;
-  margin-bottom: 19px;
-  font-weight: 700;
-  font-size: 1.6rem;
-}
-
-#resultado strong {
-  color: #E67E22;
-}
-
-.centralizado {
-  width: 100%;
-  text-align: center;
-  margin-top: 18px;
-  margin-bottom: 8px;
-}
-
-#previsaoQtd {
-  font-size: 1.45rem;
-  font-family: 'Poppins', sans-serif;
-  color: #010e1b;
-  font-weight: 700;
-  padding: 0 3px;
-  display: inline-block;
-}
-
-/* ---- TOP 10 MOTORISTAS PROFISSIONAL ---- */
-.ranking-list {
-  margin: 16px auto 12px auto;
-  padding-left: 0;
-  width: 100%;
-  max-width: 440px;
-  list-style: none;
-  counter-reset: motoristacount;
-  text-align: left;
-  background: #f8fafd;
-  border-radius: 12px;
-  box-shadow: 0 3px 12px 0 rgba(7,41,112,0.08);
-  overflow: hidden;
-}
-
-.ranking-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 11px 22px;
-  font-size: 1.08rem;
-  font-weight: 500;
-  border-bottom: 1px solid #F1F1F1;
-  color: #072970;
-  background: #f8fafd;
-  position: relative;
-  min-height: 44px;
-}
-
-.ranking-list li:last-child {
-  border-bottom: none;
-}
-
-.ranking-list li::before {
-  content: counter(motoristacount) ".";
-  counter-increment: motoristacount;
-  display: inline-block;
-  width: 2em;
-  font-weight: 700;
-  color: #E67E22;
-  font-size: 1.05em;
-  flex-shrink: 0;
-  text-align: right;
-  margin-right: 10px;
-}
-
-.ranking-list li:first-child {
-  background: linear-gradient(to right, #ffe5ca 70%, #f8fafd 100%);
-  font-size: 1.13rem;
-  font-weight: 700;
-}
-
-.ranking-list li:nth-child(2),
-.ranking-list li:nth-child(3) {
-  background: linear-gradient(to right,#f7f2e7 55%, #f8fafd 100%);
-}
-
-.ranking-list li span.valor {
-  font-weight: 700;
-  color: #E67E22;
-  min-width: 58px;
-  text-align: right;
-}
-
-
-/* --- Ranking por tipo de evento --- */
-#eventosEspecificos {
-  margin-top: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
-}
-
-/* Cards de evento */
+/* Base styling for all result cards */
 .result-card {
-  background-color: #ECF0F1;
-  border-left: 5px solid #E67E22;
-  padding: 20px 16px;
-  border-radius: 10px;
-  min-width: 210px;
-  max-width: 340px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  margin-bottom: 16px;
-  flex: 1 1 220px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-.result-card strong {
-  color: #010e1b;
-  margin-bottom: 7px;
-  display: inline-block;
+.result-card h3 {
+    color: #010e1b; /* Default: Navy Blue muito escuro para o título do card */
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
 .result-card ul {
-  list-style: none;
-  padding: 0;
-  margin: 8px 0 0 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .result-card ul li {
-  padding: 6px 0;
-  border-bottom: 1px dashed #BDC3C7;
-  font-size: 1rem;
-  color: #010e1b;
+    padding: 8px 0;
+    border-bottom: 1px dashed #BDC3C7;
+    font-size: 1.1rem;
+    color: #010e1b; /* Default: Navy Blue muito escuro para o texto da lista */
 }
 
 .result-card ul li:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
-/* --- Mensagens de Erro --- */
-#mensagemErro {
-  margin: 18px auto;
-  background: #FBEAEA;
-  color: #C0392B;
-  border-left: 6px solid #C0392B;
-  border-radius: 8px;
-  font-size: 1.08rem;
-  font-weight: 600;
-  padding: 18px 24px;
-  box-shadow: 0 1px 5px rgba(203, 61, 43, 0.04);
-  width: 100%;
-  max-width: 610px;
-  display: none;
-  letter-spacing: 0.02rem;
+/* --- Grid Layout for Summary Cards --- */
+.prediction-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Two columns, responsive */
+    gap: 20px; /* Space between cards */
+    margin-bottom: 20px;
+}
+
+/* --- Total Events Card --- */
+.total-events-card {
+    background-color: #ECF0F1; /* Cinza claro */
+    border-left: 6px solid #E67E22; /* Laranja da Ritmo na borda esquerda */
+}
+
+.total-events-card p {
+    font-size: 2.5rem; /* Grande para destaque */
+    font-weight: 700;
+    color: #E67E22; /* Laranja em destaque */
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* --- Top 3 Drivers Emphasis Card --- */
+.top-drivers-emphasis-card {
+    background: linear-gradient(to right, #072970, #010e1b); /* Gradiente de azul escuro para mais escuro */
+    color: #fff; /* Texto branco */
+    border-left: none; /* Sem borda laranja */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Sombra mais forte */
+    text-align: center; /* Centraliza conteúdo */
+}
+
+.top-drivers-emphasis-card h3 {
+    color: #E67E22; /* Laranja para o título */
+    font-size: 1.7rem;
+    border-bottom-color: rgba(255,255,255,0.2);
+}
+
+.top-drivers-emphasis-card ul li {
+    font-size: 1.35rem; /* Texto maior */
+    font-weight: 600;
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.3); /* Linha tracejada clara */
+    display: flex; /* Para alinhar nome e probabilidade */
+    justify-content: space-between;
+}
+.top-drivers-emphasis-card ul li:first-child {
+    color: #FFD700; /* Dourado para o primeiro */
+}
+.top-drivers-emphasis-card ul li:nth-child(2) {
+    color: #C0C0C0; /* Prata para o segundo */
+}
+.top-drivers-emphasis-card ul li:nth-child(3) {
+    color: #CD7F32; /* Bronze para o terceiro */
+}
+
+/* Estilo para o nome do motorista e probabilidade dentro do Top 3 */
+.top-drivers-emphasis-card .driver-name {
+    font-weight: 700;
+}
+.top-drivers-emphasis-card .driver-prob {
+    font-weight: 600;
+}
+
+
+/* --- Other Top Drivers Card (Top 4-10) --- */
+.other-top-drivers-card {
+    background-color: #ECF0F1; /* Cinza claro */
+    border-left: 6px solid #E67E22; /* Laranja da Ritmo */
+}
+
+/* --- Event Probabilities Gradient Card --- */
+.event-probabilities-gradient-card {
+    background: linear-gradient(to bottom, #072970, #010e1b); /* Gradiente vertical de azul escuro para mais escuro */
+    color: #fff; /* Texto branco */
+    border-left: none; /* Sem borda */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Sombra forte */
+    padding: 25px; /* Mais padding para o container do gradiente */
+}
+
+.event-probabilities-gradient-card h3 {
+    color: #E67E22; /* Laranja para o título */
+    font-size: 1.7rem;
+    border-bottom-color: rgba(255,255,255,0.2);
+}
+
+/* Estilo para os cards de eventos individuais DENTRO do container gradiente */
+#eventosEspecificos .event-detail-card {
+    background-color: rgba(255,255,255,0.1); /* Fundo semi-transparente para deixar o gradiente aparecer */
+    border-left: 4px solid #E67E22; /* Borda laranja sutil */
+    margin-top: 15px; /* Espaçamento entre os eventos */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: none; /* Remove a sombra do card base */
+}
+
+#eventosEspecificos .event-detail-card h3 {
+    color: #E67E22; /* Laranja para o título de cada evento */
+    font-size: 1.3rem;
+    border-bottom-color: rgba(255,255,255,0.1);
+}
+
+#eventosEspecificos .event-detail-card ul li {
+    color: #fff; /* Texto branco */
+    border-bottom: 1px dashed rgba(255,255,255,0.1);
+    font-size: 1.05rem;
+}
+
+
+/* --- Error Display Section --- */
+#errorDisplay {
+    background-color: #FEE;
+    border-left: 6px solid #C0392B;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    color: #C0392B;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.error-title {
+    color: #C0392B;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+#errorDisplay p {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
 }
 
 /* --- Footer Section --- */
 footer {
-  text-align: center;
-  padding: 1.5rem 0;
-  margin-top: 40px;
-  background-color: #010e1b;
-  color: #fff;
-  font-size: 0.98rem;
-  box-shadow: 0 -3px 8px rgba(0,0,0,0.09);
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 40px;
+    background-color: #010e1b; /* Navy Blue muito escuro da Ritmo */
+    color: #fff;
+    font-size: 0.95rem;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
 }
 
 footer p {
-  margin: 0.5rem 0;
+    margin: 0.5rem 0;
 }
 
-/* --- Responsividade --- */
-@media (max-width: 1000px) {
-  main, #controls, #resultado, #uploadSection {
-    max-width: 98vw;
-    padding: 19px 6vw;
-  }
-}
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
 
-@media (max-width: 780px) {
-  header {
-    padding: 1.2rem 0;
-  }
-  header h1 {
-    font-size: 1.57rem;
-  }
-  #controls label, #controls input[type="date"], #controls button {
-    display: block;
-    width: 95%;
-    margin: 8px auto;
-    text-align: center;
-  }
-  #controls button {
-    margin-left: 0;
-    margin-top: 18px;
-  }
-  main, #controls, #resultado, #uploadSection {
-    margin: 10px 2vw;
-    padding: 13px 3vw;
-  }
-  .result-card {
-    min-width: 172px;
-    max-width: 99vw;
-  }
-  .ranking-list li {
-    font-size: 0.98rem;
-    padding: 10px 10px;
-  }
-}
+    #controls label,
+    #controls input[type="date"],
+    #controls button {
+        display: block;
+        width: calc(100% - 40px);
+        margin: 10px auto;
+    }
 
-@media (max-width: 580px) {
-  header h1 {
-    font-size: 1.1rem;
-    padding: 0;
-  }
-  #resultado h2, #uploadSection h2 {
-    font-size: 1.12rem;
-  }
-  .result-card {
-    padding: 10px 6px;
-  }
+    #controls button {
+        margin-top: 20px;
+    }
+
+    main {
+        margin: 20px 10px;
+        padding: 20px;
+    }
+
+    .result-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .prediction-summary-grid {
+        grid-template-columns: 1fr; /* Stack cards on small screens */
+    }
 }
