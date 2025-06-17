@@ -70,9 +70,17 @@ def load_and_train_model():
     else:
         print("AVISO: Coluna 'Motorista' não encontrada. Preenchimento de N/A para motoristas pode ser afetado.")
 
+    # NOVO: Verificar e preencher valores ausentes na coluna 'Localidade'
+    if 'Localidade' in dados.columns:
+        dados['Localidade'] = dados['Localidade'].fillna('Desconhecida') # Preenche com um valor padrão
+    else:
+        print("AVISO: Coluna 'Localidade' não encontrada. Preenchimento de N/A para localidades pode ser afetado.")
+
+
+    # Lidar com outras colunas de objeto e numéricas
     for column in dados.columns:
-        if dados[column].dtype == 'object' and column != 'Motorista': # Apenas colunas de objeto que não são 'Motorista'
-            # Usar .iloc[0] para pegar o primeiro elemento da mode() que retorna uma Series
+        # Exclui 'Motorista' e 'Localidade' do preenchimento genérico, pois já foram tratados
+        if dados[column].dtype == 'object' and column not in ['Motorista', 'Localidade']:
             dados[column] = dados[column].fillna(dados[column].mode().iloc[0])
         elif dados[column].dtype in ['int64', 'float64']:
             dados[column] = dados[column].fillna(dados[column].mean())
@@ -233,13 +241,32 @@ def get_prediction():
 
         eventos_probabilidades[evento_nome] = top_5_motoristas_evento[['Motorista', 'Probabilidade']].to_dict('records')
 
+    # NOVO: Analisando os 3 locais mais propensos a eventos
+    top_3_localidades_list = []
+    if dados is not None and not dados.empty and 'Localidade' in dados.columns and 'QUANTIDADE' in dados.columns and total_eventos is not None and total_eventos > 0 and not pd.isna(total_previsto_hoje):
+        eventos_por_localidade = dados.groupby('Localidade')['QUANTIDADE'].sum().reset_index()
+        top_3_localidades = eventos_por_localidade.sort_values(by='QUANTIDADE', ascending=False).head(3)
+
+        if not top_3_localidades.empty:
+            # Evita divisão por zero ou cálculo com NaN
+            if total_eventos > 0 and not pd.isna(total_previsto_hoje):
+                top_3_localidades['Probabilidade'] = (top_3_localidades['QUANTIDADE'] / total_eventos) * total_previsto_hoje
+            else:
+                top_3_localidades['Probabilidade'] = 0.0
+            top_3_localidades_list = top_3_localidades[['Localidade', 'Probabilidade']].to_dict('records')
+        else:
+            print("AVISO: Nenhuma localidade encontrada para calcular o Top 3 Locais.")
+    else:
+        print("AVISO: Não foi possível calcular o Top 3 Locais (dados ausentes, coluna 'Localidade' inexistente, total de eventos zero, ou total previsto inválido).")
+
 
     # Retorna todos os dados como JSON
     return jsonify({
         "data_previsao": data_especifica.strftime('%Y-%m-%d'),
         "previsao_total_yhat1": float(total_previsto_hoje),
         "top_10_motoristas_geral": top_10_list,
-        "probabilidade_eventos_especificos": eventos_probabilidades
+        "probabilidade_eventos_especificos": eventos_probabilidades,
+        "top_3_localidades": top_3_localidades_list # Adicionado ao JSON
     })
 
 if __name__ == '__main__':
