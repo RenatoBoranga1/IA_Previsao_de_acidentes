@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Previsão de Acidentes - Adapta</title>
+    <title>Previsão de Eventos - Adapta</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="header-content">
-            <img src="logo_ritmo.png" alt="Logo da Empresa" class="company-logo">
+            <img src="logo_ritmo.png" alt="Logo da Adapta" class="company-logo">
             <h1>Dashboard de Previsão de Eventos</h1>
             <p>Desenvolvido por Renato Boranga - IA de Previsão de Acidentes</p>
         </div>
@@ -28,32 +28,35 @@
         </section>
 
         <section id="predictionResults" class="hidden">
-            <h2>Previsão para <span id="dataPrevisao"></span></h2>
+            <!-- Cartão principal com a data e o total previsto -->
+            <div class="main-summary-card result-card">
+                <h3>Previsão para <span id="dataPrevisao"></span></h3>
+                <p>Total de Eventos Previstos</p>
+                <p class="main-prediction-number" id="totalPrevistoHoje"></p>
+            </div>
 
-            <div class="prediction-summary-grid">
-                <!-- Novo card para o Total de Eventos Previstos -->
-                <div class="result-card total-events-card">
-                    <h3>Total de Eventos Previstos</h3>
-                    <p id="totalPrevistoHoje"></p>
-                </div>
-
-                <!-- Novo card para os Top 3 Motoristas em Destaque -->
+            <!-- Grid para Top Motoristas (Top 3 e 4-10 lado a lado) -->
+            <div class="drivers-grid-container">
                 <div class="result-card top-drivers-emphasis-card">
-                    <h3>Top 3 Motoristas em Destaque</h3>
+                    <h3>Top 3 Motoristas Mais Propensos</h3>
                     <ul id="top3MotoristasDestaque"></ul>
                 </div>
+                <div class="result-card other-top-drivers-card">
+                    <h3>Outros Motoristas (4º ao 10º)</h3>
+                    <ul id="top10MotoristasGeral"></ul>
+                </div>
             </div>
 
-            <!-- Card para os outros motoristas (do 4º ao 10º) -->
-            <div class="result-card other-top-drivers-card">
-                <h3>Outros Motoristas (Top 4-10)</h3>
-                <ul id="top10MotoristasGeral"></ul>
-            </div>
-
-            <!-- Card para Probabilidade por Tipo de Evento com gradiente -->
-            <div class="result-card event-probabilities-gradient-card">
-                <h3>Probabilidade por Tipo de Evento</h3>
-                <div id="eventosEspecificos"></div>
+            <!-- Grid para Probabilidades (Eventos e Localidades lado a lado) -->
+            <div class="probabilities-grid-container">
+                <div class="result-card event-probabilities-gradient-card">
+                    <h3>Probabilidade por Tipo de Evento</h3>
+                    <div id="eventosEspecificos"></div>
+                </div>
+                <div class="result-card location-probabilities-gradient-card">
+                    <h3>Probabilidade por Localidade</h3>
+                    <ul id="top3Localidades"></ul>
+                </div>
             </div>
         </section>
 
