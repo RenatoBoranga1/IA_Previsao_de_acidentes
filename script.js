@@ -7,20 +7,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const dataPrevisaoSpan = document.getElementById('dataPrevisao');
     const totalPrevistoHojeP = document.getElementById('totalPrevistoHoje');
-    const top3MotoristasDestaqueUl = document.getElementById('top3MotoristasDestaque'); // Novo elemento
+    const top3MotoristasDestaqueUl = document.getElementById('top3MotoristasDestaque');
     const top10MotoristasGeralUl = document.getElementById('top10MotoristasGeral');
     const eventosEspecificosDiv = document.getElementById('eventosEspecificos');
+    const top3LocalidadesUl = document.getElementById('top3Localidades'); // NOVO: elemento para localidades
     const errorMessageP = document.getElementById('errorMessage');
     const errorDetailsP = document.getElementById('errorDetails');
 
-    // Define a URL base do seu backend no Render
     const BACKEND_URL = 'https://ia-previsao-ritmo-backend.onrender.com';
 
-    // Define a data padrão como "amanhã"
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
-    predictionDateInput.value = tomorrow.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    predictionDateInput.value = tomorrow.toISOString().split('T')[0];
 
     fetchDataButton.addEventListener('click', async () => {
         const selectedDate = predictionDateInput.value;
@@ -29,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Esconde tudo e mostra o carregamento
         predictionResultsSection.classList.add('hidden');
         errorDisplaySection.classList.add('hidden');
         loadingSection.classList.remove('hidden');
@@ -46,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Popula os resultados
+            // Popula o card principal (data e total previsto)
             dataPrevisaoSpan.textContent = data.data_previsao;
             if (data.previsao_total_yhat1 !== null && data.previsao_total_yhat1 !== undefined) {
                 totalPrevistoHojeP.textContent = data.previsao_total_yhat1.toFixed(2);
@@ -57,9 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Limpa as listas antes de popular
             top3MotoristasDestaqueUl.innerHTML = '';
             top10MotoristasGeralUl.innerHTML = '';
+            top3LocalidadesUl.innerHTML = ''; // NOVO: limpa a lista de localidades
 
+            // Top Motoristas
             if (data.top_10_motoristas_geral && data.top_10_motoristas_geral.length > 0) {
-                // Preenche os Top 3 Motoristas em Destaque
+                // Top 3 Motoristas em Destaque
                 data.top_10_motoristas_geral.slice(0, 3).forEach(motorista => {
                     const li = document.createElement('li');
                     const probabilidade = motorista.Probabilidade;
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     top3MotoristasDestaqueUl.appendChild(li);
                 });
 
-                // Preenche os Outros Motoristas (Top 4-10)
+                // Outros Motoristas (Top 4-10)
                 if (data.top_10_motoristas_geral.length > 3) {
                     data.top_10_motoristas_geral.slice(3, 10).forEach(motorista => {
                         const li = document.createElement('li');
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.probabilidade_eventos_especificos) {
                 for (const evento in data.probabilidade_eventos_especificos) {
                     const eventCard = document.createElement('div');
-                    eventCard.classList.add('event-detail-card'); // Adiciona a nova classe aqui
+                    eventCard.classList.add('event-detail-card');
                     eventCard.innerHTML = `<h3>${evento}</h3>`;
                     const ul = document.createElement('ul');
 
@@ -114,19 +114,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 eventosEspecificosDiv.innerHTML = '<p>Nenhuma probabilidade por tipo de evento disponível.</p>';
             }
 
-            // Mostra os resultados
-            loadingSection.classList.add('hidden');
+            // NOVO: Probabilidade por Localidade
+            if (data.top_3_localidades && data.top_3_localidades.length > 0) {
+                data.top_3_localidades.forEach(localidade => {
+                    const li = document.createElement('li');
+                    const probabilidade = localidade.Probabilidade;
+                    li.innerHTML = `<span class="location-name">${localidade.Localidade}</span> <span class="location-prob">${probabilidade !== null && probabilidade !== undefined ? probabilidade.toFixed(2).replace('.', ',') + '%' : 'N/A'}</span>`;
+                    top3LocalidadesUl.appendChild(li);
+                });
+            } else {
+                top3LocalidadesUl.innerHTML = '<li>Nenhuma localidade encontrada.</li>';
+            }
+
+
             predictionResultsSection.classList.remove('hidden');
+            loadingSection.classList.add('hidden');
 
         } catch (error) {
             console.error('Erro ao buscar dados:', error);
             errorMessageP.textContent = 'Não foi possível conectar ao servidor de previsão.';
             errorDetailsP.textContent = 'Verifique sua conexão com a internet ou se o serviço de backend está ativo.';
-            errorDisplaySection.classList.add('hidden'); // Corrigido para hidden
+            errorDisplaySection.classList.remove('hidden'); // Exibe a seção de erro
             loadingSection.classList.add('hidden');
         }
     });
 
-    // Dispara o botão uma vez ao carregar a página para mostrar a previsão de amanhã
     fetchDataButton.click();
 });
