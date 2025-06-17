@@ -1,11 +1,11 @@
-/* Importar fonte do Google Fonts (garante que a fonte Poppins seja usada) */
+/* Importar fonte do Google Fonts */
 body {
     font-family: 'Poppins', sans-serif;
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #F8F8F8; /* Fundo geral claro */
-    color: #010e1b; /* Navy Blue muito escuro para texto principal */
+    background-color: #F8F8F8;
+    color: #010e1b;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -13,7 +13,7 @@ body {
 
 /* --- Header Section --- */
 header {
-    background-color: #072970; /* Navy Blue muito escuro da Ritmo */
+    background-color: #072970;
     color: #fff;
     padding: 1.5rem 0;
     text-align: center;
@@ -35,7 +35,7 @@ header h1 {
     margin: 0;
     font-size: 2.5rem;
     font-weight: 700;
-    color: #E67E22; /* Laranja da Ritmo para o título principal no header */
+    color: #E67E22;
 }
 
 header p {
@@ -50,7 +50,7 @@ main {
     padding: 30px 20px;
     max-width: 900px;
     margin: 30px auto;
-    background: #fff; /* Fundo branco para o conteúdo principal */
+    background: #fff;
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
@@ -65,7 +65,7 @@ main {
 #controls label {
     font-size: 1.2rem;
     margin-right: 15px;
-    color: #010e1b; /* Navy Blue muito escuro para o label */
+    color: #010e1b;
     font-weight: 600;
 }
 
@@ -74,18 +74,18 @@ main {
     border: 1px solid #BDC3C7;
     border-radius: 8px;
     font-size: 1.1rem;
-    color: #010e1b; /* Navy Blue muito escuro para o texto do input */
+    color: #010e1b;
     outline: none;
     transition: border-color 0.3s ease;
 }
 
 #controls input[type="date"]:focus {
-    border-color: #E67E22; /* Laranja da Ritmo no foco */
+    border-color: #E67E22;
 }
 
 #controls button {
     padding: 12px 25px;
-    background-color: #E67E22; /* Laranja da Ritmo para o botão */
+    background-color: #E67E22;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -94,11 +94,11 @@ main {
     font-weight: 600;
     transition: background-color 0.3s ease, transform 0.2s ease;
     margin-left: 15px;
-    box-shadow: 0 4px 8px rgba(230,126,34,0.3); /* Sombra laranja para o botão */
+    box-shadow: 0 4px 8px rgba(230,126,34,0.3);
 }
 
 #controls button:hover {
-    background-color: #D35400; /* Laranja mais escuro no hover */
+    background-color: #D35400;
     transform: translateY(-2px);
 }
 
@@ -116,26 +116,18 @@ main {
     font-weight: 600;
 }
 
-/* --- Prediction Results Section --- */
-#predictionResults h2 {
-    color: #010e1b; /* Navy Blue muito escuro para o título */
-    border-bottom: 3px solid #E67E22; /* Laranja da Ritmo na linha do título */
-    padding-bottom: 15px;
-    margin-bottom: 25px;
-    font-size: 2rem;
-    font-weight: 700;
-}
-
-/* Base styling for all result cards */
+/* --- Base styling for all result cards --- */
 .result-card {
     padding: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 20px; /* Mantido para cards que não estão em grid */
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    flex: 1; /* Para flexbox ou grid, permite que os itens cresçam */
+    min-width: 0; /* Permite que o item encolha em flex/grid */
 }
 
 .result-card h3 {
-    color: #010e1b; /* Default: Navy Blue muito escuro para o título do card */
+    color: #010e1b;
     margin-top: 0;
     margin-bottom: 12px;
     font-size: 1.5rem;
@@ -154,118 +146,146 @@ main {
     padding: 8px 0;
     border-bottom: 1px dashed #BDC3C7;
     font-size: 1.1rem;
-    color: #010e1b; /* Default: Navy Blue muito escuro para o texto da lista */
+    color: #010e1b;
 }
 
 .result-card ul li:last-child {
     border-bottom: none;
 }
 
-/* --- Grid Layout for Summary Cards --- */
-.prediction-summary-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Two columns, responsive */
-    gap: 20px; /* Space between cards */
-    margin-bottom: 20px;
-}
-
-/* --- Total Events Card --- */
-.total-events-card {
-    background-color: #ECF0F1; /* Cinza claro */
-    border-left: 6px solid #E67E22; /* Laranja da Ritmo na borda esquerda */
-}
-
-.total-events-card p {
-    font-size: 2.5rem; /* Grande para destaque */
-    font-weight: 700;
-    color: #E67E22; /* Laranja em destaque */
+/* --- Main Summary Card (Data e Total) --- */
+.main-summary-card {
+    background-color: #ECF0F1;
+    border-left: 6px solid #072970; /* Azul escuro principal */
     text-align: center;
-    margin-top: 15px;
+    margin-bottom: 30px; /* Maior espaçamento antes do grid de motoristas */
+}
+
+.main-summary-card h3 {
+    color: #072970; /* Azul escuro para o título da data */
+    border-bottom: none; /* Remove a linha */
+    font-size: 1.8rem;
+    padding-bottom: 0;
+    margin-bottom: 10px;
+}
+.main-summary-card h3 span {
+    color: #E67E22; /* Laranja para a data em destaque */
+    font-weight: 700;
+}
+
+.main-summary-card p {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.main-prediction-number {
+    font-size: 3.5rem; /* Número muito grande para destaque */
+    font-weight: 900; /* Extra bold */
+    color: #E67E22; /* Laranja em destaque */
+    line-height: 1;
+    margin-top: 0;
+}
+
+
+/* --- Grid Containers --- */
+.drivers-grid-container,
+.probabilities-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 2 colunas responsivas */
+    gap: 20px; /* Espaço entre os cards */
+    margin-bottom: 30px; /* Espaço entre os grids */
 }
 
 /* --- Top 3 Drivers Emphasis Card --- */
 .top-drivers-emphasis-card {
-    background: linear-gradient(to right, #072970, #010e1b); /* Gradiente de azul escuro para mais escuro */
-    color: #fff; /* Texto branco */
-    border-left: none; /* Sem borda laranja */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Sombra mais forte */
-    text-align: center; /* Centraliza conteúdo */
+    background: linear-gradient(to right, #072970, #010e1b);
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    text-align: center;
 }
 
 .top-drivers-emphasis-card h3 {
-    color: #E67E22; /* Laranja para o título */
+    color: #E67E22;
     font-size: 1.7rem;
     border-bottom-color: rgba(255,255,255,0.2);
 }
 
 .top-drivers-emphasis-card ul li {
-    font-size: 1.35rem; /* Texto maior */
+    font-size: 1.35rem;
     font-weight: 600;
     padding: 12px 0;
-    border-bottom: 1px dashed rgba(255,255,255,0.3); /* Linha tracejada clara */
-    display: flex; /* Para alinhar nome e probabilidade */
+    border-bottom: 1px dashed rgba(255,255,255,0.3);
+    display: flex;
     justify-content: space-between;
+    align-items: center;
 }
-.top-drivers-emphasis-card ul li:first-child {
-    color: #FFD700; /* Dourado para o primeiro */
-}
-.top-drivers-emphasis-card ul li:nth-child(2) {
-    color: #C0C0C0; /* Prata para o segundo */
-}
-.top-drivers-emphasis-card ul li:nth-child(3) {
-    color: #CD7F32; /* Bronze para o terceiro */
-}
-
-/* Estilo para o nome do motorista e probabilidade dentro do Top 3 */
-.top-drivers-emphasis-card .driver-name {
-    font-weight: 700;
-}
-.top-drivers-emphasis-card .driver-prob {
-    font-weight: 600;
-}
-
+.top-drivers-emphasis-card ul li:nth-child(1) { color: #FFD700; /* Gold */ }
+.top-drivers-emphasis-card ul li:nth-child(2) { color: #C0C0C0; /* Silver */ }
+.top-drivers-emphasis-card ul li:nth-child(3) { color: #CD7F32; /* Bronze */ }
 
 /* --- Other Top Drivers Card (Top 4-10) --- */
 .other-top-drivers-card {
-    background-color: #ECF0F1; /* Cinza claro */
+    background-color: #ECF0F1;
     border-left: 6px solid #E67E22; /* Laranja da Ritmo */
 }
 
 /* --- Event Probabilities Gradient Card --- */
 .event-probabilities-gradient-card {
-    background: linear-gradient(to bottom, #072970, #010e1b); /* Gradiente vertical de azul escuro para mais escuro */
-    color: #fff; /* Texto branco */
-    border-left: none; /* Sem borda */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Sombra forte */
-    padding: 25px; /* Mais padding para o container do gradiente */
+    background: linear-gradient(to bottom, #072970, #010e1b);
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    padding: 25px;
 }
 
 .event-probabilities-gradient-card h3 {
-    color: #E67E22; /* Laranja para o título */
+    color: #E67E22;
     font-size: 1.7rem;
     border-bottom-color: rgba(255,255,255,0.2);
 }
 
 /* Estilo para os cards de eventos individuais DENTRO do container gradiente */
 #eventosEspecificos .event-detail-card {
-    background-color: rgba(255,255,255,0.1); /* Fundo semi-transparente para deixar o gradiente aparecer */
-    border-left: 4px solid #E67E22; /* Borda laranja sutil */
-    margin-top: 15px; /* Espaçamento entre os eventos */
+    background-color: rgba(255,255,255,0.1);
+    border-left: 4px solid #E67E22;
+    margin-top: 15px;
     padding: 15px;
     border-radius: 8px;
-    box-shadow: none; /* Remove a sombra do card base */
+    box-shadow: none;
 }
 
 #eventosEspecificos .event-detail-card h3 {
-    color: #E67E22; /* Laranja para o título de cada evento */
+    color: #E67E22;
     font-size: 1.3rem;
     border-bottom-color: rgba(255,255,255,0.1);
 }
 
 #eventosEspecificos .event-detail-card ul li {
-    color: #fff; /* Texto branco */
+    color: #fff;
     border-bottom: 1px dashed rgba(255,255,255,0.1);
     font-size: 1.05rem;
+}
+
+/* --- Location Probabilities Gradient Card --- */
+.location-probabilities-gradient-card {
+    background: linear-gradient(to bottom, #E67E22, #D35400); /* Gradiente de laranja para um laranja mais escuro */
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.location-probabilities-gradient-card h3 {
+    color: #fff; /* Título branco */
+    font-size: 1.7rem;
+    border-bottom-color: rgba(255,255,255,0.2);
+}
+
+.location-probabilities-gradient-card ul li {
+    color: #fff;
+    border-bottom: 1px dashed rgba(255,255,255,0.3);
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
 }
 
 
@@ -296,7 +316,7 @@ footer {
     text-align: center;
     padding: 1.5rem 0;
     margin-top: 40px;
-    background-color: #010e1b; /* Navy Blue muito escuro da Ritmo */
+    background-color: #010e1b;
     color: #fff;
     font-size: 0.95rem;
     box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
@@ -333,7 +353,16 @@ footer p {
         font-size: 1.3rem;
     }
 
-    .prediction-summary-grid {
-        grid-template-columns: 1fr; /* Stack cards on small screens */
+    /* Grids stack on small screens */
+    .drivers-grid-container,
+    .probabilities-grid-container {
+        grid-template-columns: 1fr;
+    }
+
+    .main-summary-card h3 {
+        font-size: 1.5rem;
+    }
+    .main-prediction-number {
+        font-size: 2.8rem;
     }
 }
