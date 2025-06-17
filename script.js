@@ -7,13 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const dataPrevisaoSpan = document.getElementById('dataPrevisao');
     const totalPrevistoHojeP = document.getElementById('totalPrevistoHoje');
+    const top3MotoristasDestaqueUl = document.getElementById('top3MotoristasDestaque'); // Novo elemento
     const top10MotoristasGeralUl = document.getElementById('top10MotoristasGeral');
     const eventosEspecificosDiv = document.getElementById('eventosEspecificos');
     const errorMessageP = document.getElementById('errorMessage');
     const errorDetailsP = document.getElementById('errorDetails');
 
     // Define a URL base do seu backend no Render
-    // Certifique-se de que esta URL está correta e corresponde ao seu serviço no Render
     const BACKEND_URL = 'https://ia-previsao-ritmo-backend.onrender.com';
 
     // Define a data padrão como "amanhã"
@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingSection.classList.remove('hidden');
 
         try {
-            // Usa a URL do backend definida
             const response = await fetch(`${BACKEND_URL}/predict?date=${selectedDate}`);
             const data = await response.json();
 
@@ -49,24 +48,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Popula os resultados
             dataPrevisaoSpan.textContent = data.data_previsao;
-            // Verificação de null/undefined para totalPrevistoHojeP
             if (data.previsao_total_yhat1 !== null && data.previsao_total_yhat1 !== undefined) {
-                totalPrevistoHojeP.textContent = data.previsao_total_yhat1.toFixed(2); // Não adicionamos '%' aqui pois é o total de eventos previstos, não probabilidade
+                totalPrevistoHojeP.textContent = data.previsao_total_yhat1.toFixed(2);
             } else {
                 totalPrevistoHojeP.textContent = "N/A";
             }
 
-            // Top 10 Motoristas Geral
+            // Limpa as listas antes de popular
+            top3MotoristasDestaqueUl.innerHTML = '';
             top10MotoristasGeralUl.innerHTML = '';
+
             if (data.top_10_motoristas_geral && data.top_10_motoristas_geral.length > 0) {
-                data.top_10_motoristas_geral.forEach(motorista => {
+                // Preenche os Top 3 Motoristas em Destaque
+                data.top_10_motoristas_geral.slice(0, 3).forEach(motorista => {
                     const li = document.createElement('li');
                     const probabilidade = motorista.Probabilidade;
-                    // ALTERADO: Adicionado .replace('.', ',') e '%'
-                    li.textContent = `${motorista.Motorista}: ${probabilidade !== null && probabilidade !== undefined ? probabilidade.toFixed(2).replace('.', ',') + '%' : 'N/A'}`;
-                    top10MotoristasGeralUl.appendChild(li);
+                    li.innerHTML = `<span class="driver-name">${motorista.Motorista}</span> <span class="driver-prob">${probabilidade !== null && probabilidade !== undefined ? probabilidade.toFixed(2).replace('.', ',') + '%' : 'N/A'}</span>`;
+                    top3MotoristasDestaqueUl.appendChild(li);
                 });
+
+                // Preenche os Outros Motoristas (Top 4-10)
+                if (data.top_10_motoristas_geral.length > 3) {
+                    data.top_10_motoristas_geral.slice(3, 10).forEach(motorista => {
+                        const li = document.createElement('li');
+                        const probabilidade = motorista.Probabilidade;
+                        li.textContent = `${motorista.Motorista}: ${probabilidade !== null && probabilidade !== undefined ? probabilidade.toFixed(2).replace('.', ',') + '%' : 'N/A'}`;
+                        top10MotoristasGeralUl.appendChild(li);
+                    });
+                } else {
+                    top10MotoristasGeralUl.innerHTML = '<li>Não há motoristas adicionais no Top 10.</li>';
+                }
             } else {
+                top3MotoristasDestaqueUl.innerHTML = '<li>Nenhum motorista encontrado no top 3.</li>';
                 top10MotoristasGeralUl.innerHTML = '<li>Nenhum motorista encontrado no top 10.</li>';
             }
 
@@ -75,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.probabilidade_eventos_especificos) {
                 for (const evento in data.probabilidade_eventos_especificos) {
                     const eventCard = document.createElement('div');
-                    eventCard.classList.add('result-card');
+                    eventCard.classList.add('event-detail-card'); // Adiciona a nova classe aqui
                     eventCard.innerHTML = `<h3>${evento}</h3>`;
                     const ul = document.createElement('ul');
 
@@ -84,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         eventoData.forEach(motorista => {
                             const li = document.createElement('li');
                             const probabilidade = motorista.Probabilidade;
-                            // ALTERADO: Adicionado .replace('.', ',') e '%'
                             li.textContent = `${motorista.Motorista}: ${probabilidade !== null && probabilidade !== undefined ? probabilidade.toFixed(2).replace('.', ',') + '%' : 'N/A'}`;
                             ul.appendChild(li);
                         });
@@ -109,9 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Erro ao buscar dados:', error);
             errorMessageP.textContent = 'Não foi possível conectar ao servidor de previsão.';
-            // Mensagem de erro mais genérica para deploy
             errorDetailsP.textContent = 'Verifique sua conexão com a internet ou se o serviço de backend está ativo.';
-            errorDisplaySection.classList.remove('hidden');
+            errorDisplaySection.classList.add('hidden'); // Corrigido para hidden
             loadingSection.classList.add('hidden');
         }
     });
