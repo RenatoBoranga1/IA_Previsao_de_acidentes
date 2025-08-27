@@ -103,7 +103,24 @@ def load_and_train_model():
 
     # 6. Converter colunas de data para datetime
     if 'Data' in dados.columns:
-        dados['Data'] = pd.to_datetime(dados['Data'], format="%d/%m/%Y %H:%M", dayfirst=True)
+        # === ALTERAÇÃO AQUI: Usar format='mixed' e errors='coerce' ===
+        dados['Data'] = pd.to_datetime(dados['Data'], format='mixed', dayfirst=True, errors='coerce')
+
+        # Verificar se há valores NaT após a conversão, indicando falhas na conversão
+        if dados['Data'].isnull().any():
+            num_invalid_dates = dados['Data'].isnull().sum()
+            print(f"AVISO: {num_invalid_dates} valores na coluna 'Data' não puderam ser convertidos para datetime e foram definidos como NaT.")
+            print("Por favor, verifique a consistência do formato das datas no seu 'basedadosseguranca.csv'.")
+            
+            # Remover as linhas com datas inválidas para evitar problemas no treinamento do modelo
+            dados.dropna(subset=['Data'], inplace=True)
+            print("INFO: Linhas com datas inválidas foram removidas para prosseguir com o treinamento do modelo.")
+        
+        # Verificar se o DataFrame não ficou vazio após a remoção de linhas com datas inválidas
+        if dados.empty:
+            print("ERRO CRÍTICO: Após a limpeza de datas inválidas, o DataFrame ficou vazio. Impossível prosseguir.")
+            sys.exit(1)
+
     else:
         print("ERRO CRÍTICO: Coluna 'Data' não encontrada no arquivo CSV. Impossível prosseguir.")
         sys.exit(1)
