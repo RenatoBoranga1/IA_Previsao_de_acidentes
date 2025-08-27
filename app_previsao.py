@@ -103,7 +103,7 @@ def load_and_train_model():
 
     # 6. Converter colunas de data para datetime
     if 'Data' in dados.columns:
-        dados['Data'] = pd.to_datetime(dados['Data'], dayfirst=True)
+        dados['Data'] = pd.to_datetime(dados['Data'], format="%d/%m/%Y %H:%M", dayfirst=True)
     else:
         print("ERRO CRÍTICO: Coluna 'Data' não encontrada no arquivo CSV. Impossível prosseguir.")
         sys.exit(1)
