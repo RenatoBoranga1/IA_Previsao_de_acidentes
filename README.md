@@ -1,103 +1,201 @@
-# IA Previsão de Eventos 
+# Radar de Prevenção Operacional
 
-Este sistema realiza previsão de eventos (operações/logística) utilizando um modelo de séries temporais com NeuralProphet. Ele conta com uma API RESTful (Flask), frontend web responsivo e deploy em nuvem via Render.
-________________________________________
-## 🎯 Objetivo
-Antecipar o número de eventos em cada dia futuro e apresentar rankings dos motoristas mais propensos a aparecerem em incidentes, além de análises específicas por tipo de evento, tornando a gestão logística mais eficiente e preventiva.
-________________________________________
-## 🚀 Arquitetura
-•	Backend: Python (Flask, NeuralProphet, pandas, torch)
-•	Frontend: HTML5, CSS3, JavaScript
-•	Hospedagem: Render (Backend e Site Estático)
-•	Banco de dados: Arquivo CSV de histórico (basedadosseguranca.csv)
-________________________________________
-## 🗂️ Funcionalidades
-•	Previsão diária de eventos operacionais
-•	Top 10 motoristas mais propensos a eventos
-•	Ranking dos cinco motoristas mais envolvidos por tipo de evento
-•	Respostas em tempo real via API RESTful
-•	Interface web dinâmica e amigável
-•	Mensagens de erro detalhadas e consistentes
-•	Deploy automático e separado para frontend/backend
-________________________________________
-## ⚙️ Como Usar
-1. Backend
-Requisitos:
-•	Python 3.11+
-•	Virtualenv recomendado
-Instalação:
-bashCopiar
-git clone https://github.com/seu-usuario/seu-repo.git
-cd seu-repo
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-Copie seu arquivo basedadosseguranca.csv para a pasta do projeto.
-Rodando localmente:
-bashCopiar
-python app_previsao.py
+Painel preditivo para prevenção de acidentes em operações logísticas, com API Flask modular, autenticação por perfil, frontend executivo e esteira CI para lint, smoke test e deploy.
 
-# ou para produção
+## Preview
 
-gunicorn app_previsao:app
-2. Frontend
-•	Edite o arquivo script.js se necessário para apontar para a URL correta do backend (exemplo: https://ia-previsao-ritmo-backend.onrender.com/predict).
-•	Hospede arquivos do frontend como site estático no Render, Netlify, Vercel ou GitHub Pages.
-•	Ou simplesmente abra index.html no navegador para testes locais.
-3. Testando
-1.	Acesse o frontend pela URL ou arquivo local.
-2.	Escolha uma data e clique em "Buscar Previsão".
-3.	Resultados e rankings serão exibidos na tela.
-________________________________________
-## 🔗 Endpoints e API
-GET /predict?date=YYYY-MM-DD
-Parâmetro:
-•	date: data para previsão (YYYY-MM-DD, opcional. Default = amanhã)
-Resposta:
-jsonCopiar
+### Dashboard desktop
+
+![Dashboard desktop](docs/screenshots/dashboard-overview.png)
+
+### Dashboard mobile
+
+![Dashboard mobile](docs/screenshots/dashboard-mobile.png)
+
+## O que mudou nesta evolução
+
+- separação de camadas em módulos dedicados de configuração, autenticação, modelos, repositórios, serviços e rotas
+- autenticação por token com perfis `admin`, `gestor` e `analista`
+- endpoint administrativo protegido para diretório de usuários
+- frontend com login, sessão persistida, modo demo e painel administrativo por role
+- screenshots reais do dashboard publicadas no repositório
+- pipeline GitHub Actions para lint, smoke test e deploy por hook
+
+## Arquitetura
+
+```text
+.
+|-- app_previsao.py
+|-- radar_preventivo/
+|   |-- config.py
+|   |-- auth/
+|   |-- models/
+|   |-- repositories/
+|   |-- routes/
+|   `-- services/
+|-- index.html
+|-- style.css
+|-- script.js
+|-- auth_users.example.json
+|-- requirements.txt
+|-- requirements-dev.txt
+|-- requirements-ci.txt
+|-- docs/screenshots/
+|-- scripts/capture_dashboard.ps1
+`-- tests/
+```
+
+## Perfis de acesso
+
+- `admin`: consulta o dashboard e acessa o diretório de usuários e permissões
+- `gestor`: acessa previsões, hotspots e leitura executiva
+- `analista`: acessa previsões, rankings e detalhamento técnico
+
+Os endpoints protegidos exigem token Bearer:
+
+- `GET /auth/me`
+- `GET /auth/users` (`admin` apenas)
+- `GET /predict?date=YYYY-MM-DD`
+
+## Autenticação
+
+### Usuários
+
+O backend procura usuários em `auth_users.json`. O arquivo de exemplo versionado é `auth_users.example.json`.
+
+Fluxo recomendado:
+
+1. copiar `auth_users.example.json` para `auth_users.json`
+2. trocar os hashes e usuários pelos dados reais do ambiente
+3. manter `auth_users.json` fora do Git
+
+### Login
+
+`POST /auth/login`
+
+Exemplo:
+
+```json
 {
-  "data_previsao": "2025-06-15",
-  "previsao_total_yhat1": 19.12,
-  "top10_motoristas_geral": [
-    {"Motorista": "João", "Probabilidade": 3.02},
-    ...
-  ],
-  "probabilidade_eventos_especificos": {
-    "Excesso de Velocidade": [
-      {"Motorista": "Carlos", "Probabilidade": 0.25},
-      ...
-    ],
-    ...
+  "email": "admin@radar.local",
+  "password": "Admin123!"
+}
+```
+
+Resposta:
+
+```json
+{
+  "access_token": "token-assinado",
+  "token_type": "Bearer",
+  "expires_in": 28800,
+  "user": {
+    "name": "Admin Demo",
+    "role": "admin",
+    "role_title": "Administrador",
+    "permissions": ["dashboard:view", "users:read", "auth:manage"]
   }
 }
-•	404: Data fora do intervalo previsto
-•	500: Erro interno ao preparar/prever
-________________________________________
-## ✨ Personalização
-•	Mude estilos no style.css conforme a paleta institucional.
-•	Edite textos/front em index.html e script.js.
-•	Atualize o arquivo CSV para novos dados.
-•	Para deploy contínuo, faça push para a branch configurada no Render/Netlify.
-________________________________________
-## ✅ Melhores Práticas
-•	Padronização em snake_case para nomes de variáveis e chaves JSON.
-•	CORS habilitado no backend.
-•	Tratamento robusto de exceções e mensagens ao usuário final.
-________________________________________
-## 📚 Roadmap (Sugestões Futuras)
-•	Adicionar autenticação (JWT ou OAuth2)
-•	Dashboard visual com gráficos interativos (Plotly, Chart.js)
-•	Cadastro e upload de novos arquivos CSV via web
-•	Notificações por e-mail ou WhatsApp quando previsões forem críticas
-________________________________________
-## 🙋 FAQ
-Preciso reiniciar o backend ao trocar o CSV?
-Sim. O modelo é treinado ao inicializar a aplicação.
-Posso publicar/modificar para outro contexto?
-Sim! Basta adaptar a estrutura dos dados e reconfigurar ingestão/modelo.
-O frontend funciona em qualquer hosting estático?
-Sim! Basta apontar a URL da API no script.js corretamente.
-________________________________________
-## 👨‍💻 Créditos
-Desenvolvido por Renato Boranga
-IA de Previsão de Acidentes para Ritmo Logística
+```
+
+## Como rodar localmente
+
+### Backend
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-dev.txt
+python app_previsao.py
+```
+
+No PowerShell:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements-dev.txt
+python .\app_previsao.py
+```
+
+### Frontend
+
+Abra `index.html` no navegador.
+
+Com backend local:
+
+- o frontend usa `http://127.0.0.1:5000` em `localhost`
+- em `file://`, ele usa o fallback configurado em `FALLBACK_BACKEND_URL`
+- você pode sobrescrever a API com `?api=https://sua-api`
+
+Modo demo para apresentação e screenshots:
+
+```text
+index.html?demo=1
+index.html?demo=1&demoRole=admin
+```
+
+## Geração de screenshots
+
+Script incluído:
+
+```powershell
+.\scripts\capture_dashboard.ps1
+```
+
+O script usa Chrome headless para gerar:
+
+- `docs/screenshots/dashboard-overview.png`
+- `docs/screenshots/dashboard-mobile.png`
+
+## Testes e pipeline
+
+### Lint local
+
+```bash
+ruff check .
+```
+
+### Smoke test local
+
+```bash
+pytest
+```
+
+Os testes usam `predictor_mode=mock`, evitando depender de treinamento real do NeuralProphet no CI.
+
+### GitHub Actions
+
+Workflow em `.github/workflows/ci.yml`:
+
+- instala dependências leves de CI
+- roda `ruff check .`
+- roda `pytest`
+- dispara deploy via hooks do Render em `main`
+
+Secrets esperados para deploy:
+
+- `RENDER_BACKEND_DEPLOY_HOOK_URL`
+- `RENDER_FRONTEND_DEPLOY_HOOK_URL`
+
+## Configurações úteis
+
+- `APP_DATA_FILE`: caminho do CSV principal
+- `APP_DISMISSED_DRIVERS_FILE`: caminho do CSV de motoristas desligados
+- `APP_AUTH_USERS_FILE`: caminho do arquivo real de usuários
+- `APP_ALLOW_DEMO_USERS`: habilita usuários demo no backend
+- `APP_PREDICTOR_MODE`: `neuralprophet` ou `mock`
+- `APP_SECRET_KEY`: chave de assinatura dos tokens
+- `APP_TOKEN_TTL_SECONDS`: validade do token
+- `FORECAST_DAYS`: horizonte da previsão
+- `RECENT_HISTORY_DAYS`: janela da série recente
+
+## Observações de deploy
+
+- o fluxo de deploy do workflow usa hooks para desacoplar CI de provedor
+- o frontend continua estático e pode ser hospedado em Render, Netlify, Vercel ou GitHub Pages
+- o backend suporta mock mode para smoke tests e NeuralProphet para ambiente real
+
+## Crédito
+
+Projeto de Renato Boranga, evoluído para uma base mais profissional com foco em produto, governança de acesso, apresentação visual e operação contínua.
