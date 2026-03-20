@@ -135,6 +135,30 @@ index.html?demo=1
 index.html?demo=1&demoRole=admin
 ```
 
+## Deploy no Railway
+
+O repositório agora inclui:
+
+- `Dockerfile`
+- `.dockerignore`
+- `railway.json`
+
+Isso faz o Railway usar build por Dockerfile em vez de depender da detecção automática do Railpack.
+
+### Variáveis recomendadas no Railway
+
+- `APP_SECRET_KEY`: chave de assinatura dos tokens
+- `APP_ALLOW_DEMO_USERS=true`: útil para validar a API rapidamente
+- `APP_PREDICTOR_MODE=neuralprophet`: modo real
+
+Se você ainda não tiver um `auth_users.json` real no deploy, use `APP_ALLOW_DEMO_USERS=true` temporariamente para testar login com:
+
+- `admin@radar.local` / `Admin123!`
+- `gestor@radar.local` / `Gestor123!`
+- `analista@radar.local` / `Analista123!`
+
+Depois, substitua por usuários reais via `APP_AUTH_USERS_FILE` ou imagem customizada com o arquivo apropriado.
+
 ## Geração de screenshots
 
 Script incluído:
