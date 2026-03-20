@@ -1,4 +1,5 @@
 const FALLBACK_BACKEND_URL = "https://ia-previsao-ritmo-backend.onrender.com";
+const AUTH_TOKEN_STORAGE_KEY = "radarPreventivo.authToken";
 
 const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
     day: "2-digit",
@@ -16,23 +17,197 @@ const compactFormatter = new Intl.NumberFormat("pt-BR", {
     maximumFractionDigits: 1,
 });
 
+const urlParams = new URLSearchParams(window.location.search);
+
+const DEMO_HEALTH = {
+    model_ready: true,
+    records_loaded: 1033,
+    historical_window: {
+        start: "2025-04-13",
+        end: "2025-10-11",
+    },
+    suggested_prediction_date: "2025-10-12",
+    forecast_days: 45,
+    predictor_mode: "demo",
+    backend_name: "demo-payload",
+};
+
+const DEMO_USERS = [
+    {
+        id: "admin-demo",
+        name: "Admin Demo",
+        email: "admin@radar.local",
+        role: "admin",
+        role_title: "Administrador",
+        permissions: ["dashboard:view", "users:read", "auth:manage"],
+        active: true,
+    },
+    {
+        id: "gestor-demo",
+        name: "Gestor Demo",
+        email: "gestor@radar.local",
+        role: "gestor",
+        role_title: "Gestor Operacional",
+        permissions: ["dashboard:view"],
+        active: true,
+    },
+    {
+        id: "analista-demo",
+        name: "Analista Demo",
+        email: "analista@radar.local",
+        role: "analista",
+        role_title: "Analista",
+        permissions: ["dashboard:view"],
+        active: true,
+    },
+];
+
+const DEMO_TEMPLATE = {
+    previsao_total_yhat1: 18.42,
+    forecast_period_start: "2025-10-12",
+    forecast_period_end: "2025-11-25",
+    top_10_motoristas_geral: [
+        { Motorista: "ANTONIO MARCOS BATISTA", ParticipacaoPercentual: 8.7, VolumeHistorico: 90, EventosEsperados: 1.6 },
+        { Motorista: "ALEXANDRO ROBERTO SILVEIRA", ParticipacaoPercentual: 7.4, VolumeHistorico: 77, EventosEsperados: 1.36 },
+        { Motorista: "FABIANO EUGENIO", ParticipacaoPercentual: 6.9, VolumeHistorico: 71, EventosEsperados: 1.27 },
+        { Motorista: "OSMIR ANTONIO MENDONÇA", ParticipacaoPercentual: 6.1, VolumeHistorico: 63, EventosEsperados: 1.12 },
+        { Motorista: "JOSÉ CARLOS PEREIRA", ParticipacaoPercentual: 5.6, VolumeHistorico: 58, EventosEsperados: 1.03 },
+        { Motorista: "MATEUS HENRIQUE", ParticipacaoPercentual: 5.1, VolumeHistorico: 53, EventosEsperados: 0.94 },
+        { Motorista: "ROBERTO CAMARGO", ParticipacaoPercentual: 4.8, VolumeHistorico: 50, EventosEsperados: 0.88 },
+        { Motorista: "ELIAS DOS SANTOS", ParticipacaoPercentual: 4.4, VolumeHistorico: 46, EventosEsperados: 0.81 },
+        { Motorista: "LUIZ FERNANDO", ParticipacaoPercentual: 4.1, VolumeHistorico: 42, EventosEsperados: 0.75 },
+        { Motorista: "GILMAR SOUZA", ParticipacaoPercentual: 3.8, VolumeHistorico: 39, EventosEsperados: 0.7 },
+    ],
+    top_3_localidades: [
+        { Localidade: "Rodovia Raposo Tavares - Ipaussu - SP - BR", ParticipacaoPercentual: 7.3, VolumeHistorico: 75, EventosEsperados: 1.34 },
+        { Localidade: "Estrada Bairro do Pica Pau - Santa Cruz do Rio Pardo", ParticipacaoPercentual: 6.8, VolumeHistorico: 70, EventosEsperados: 1.25 },
+        { Localidade: "Estrada Agrícola - Santa Cruz do Rio Pardo - SP - BR", ParticipacaoPercentual: 5.1, VolumeHistorico: 53, EventosEsperados: 0.95 },
+    ],
+    top_tipos_evento: [
+        { TipoEvento: "Aceleração", ParticipacaoPercentual: 71.3, VolumeHistorico: 737, EventosEsperados: 13.13 },
+        { TipoEvento: "Fadiga", ParticipacaoPercentual: 23.0, VolumeHistorico: 238, EventosEsperados: 4.23 },
+        { TipoEvento: "Agressividade", ParticipacaoPercentual: 4.7, VolumeHistorico: 49, EventosEsperados: 0.87 },
+        { TipoEvento: "Gestão de Risco", ParticipacaoPercentual: 0.9, VolumeHistorico: 9, EventosEsperados: 0.16 },
+    ],
+    probabilidade_eventos_especificos: {
+        "Aceleração": [
+            { Motorista: "ANTONIO MARCOS BATISTA", VolumeHistorico: 45, ParticipacaoNoEventoPercentual: 12.1, EventosEsperados: 1.59 },
+            { Motorista: "ALEXANDRO ROBERTO SILVEIRA", VolumeHistorico: 41, ParticipacaoNoEventoPercentual: 11.0, EventosEsperados: 1.45 },
+            { Motorista: "FABIANO EUGENIO", VolumeHistorico: 38, ParticipacaoNoEventoPercentual: 10.3, EventosEsperados: 1.35 },
+        ],
+        "Fadiga": [
+            { Motorista: "JOSÉ CARLOS PEREIRA", VolumeHistorico: 24, ParticipacaoNoEventoPercentual: 10.1, EventosEsperados: 0.43 },
+            { Motorista: "MATEUS HENRIQUE", VolumeHistorico: 21, ParticipacaoNoEventoPercentual: 8.8, EventosEsperados: 0.37 },
+            { Motorista: "ROBERTO CAMARGO", VolumeHistorico: 20, ParticipacaoNoEventoPercentual: 8.4, EventosEsperados: 0.35 },
+        ],
+        "Agressividade": [
+            { Motorista: "ELIAS DOS SANTOS", VolumeHistorico: 9, ParticipacaoNoEventoPercentual: 18.4, EventosEsperados: 0.16 },
+            { Motorista: "LUIZ FERNANDO", VolumeHistorico: 8, ParticipacaoNoEventoPercentual: 16.3, EventosEsperados: 0.14 },
+            { Motorista: "GILMAR SOUZA", VolumeHistorico: 6, ParticipacaoNoEventoPercentual: 12.2, EventosEsperados: 0.11 },
+        ],
+        "Gestão de Risco": [
+            { Motorista: "ADMINISTRAÇÃO PREVENTIVA", VolumeHistorico: 3, ParticipacaoNoEventoPercentual: 33.3, EventosEsperados: 0.05 },
+        ],
+    },
+    serie_historica_recente: [
+        { data: "2025-09-28", total: 14 },
+        { data: "2025-09-29", total: 16 },
+        { data: "2025-09-30", total: 13 },
+        { data: "2025-10-01", total: 17 },
+        { data: "2025-10-02", total: 18 },
+        { data: "2025-10-03", total: 16 },
+        { data: "2025-10-04", total: 19 },
+        { data: "2025-10-05", total: 14 },
+        { data: "2025-10-06", total: 20 },
+        { data: "2025-10-07", total: 18 },
+        { data: "2025-10-08", total: 21 },
+        { data: "2025-10-09", total: 17 },
+        { data: "2025-10-10", total: 19 },
+        { data: "2025-10-11", total: 18 },
+    ],
+    resumo_executivo: {
+        nivel_risco: "moderado",
+        indice_risco_relativo: 1.08,
+        variacao_media_percentual: 8.3,
+        media_diaria_historica: 17.0,
+        pico_diario_historico: 33,
+        motorista_prioritario: "ANTONIO MARCOS BATISTA",
+        localidade_critica: "Rodovia Raposo Tavares - Ipaussu - SP - BR",
+        tipo_evento_lider: "Aceleração",
+    },
+    insights_prioritarios: [
+        "Cenário moderado: a previsão indica 18,42 eventos para a data selecionada, acima da média histórica diária.",
+        "Motorista prioritário: ANTONIO MARCOS BATISTA concentra a maior participação histórica entre os nomes ativos.",
+        "Hotspot principal: Rodovia Raposo Tavares - Ipaussu - SP - BR segue como a localidade com maior pressão operacional.",
+        "Aceleração domina o risco atual e deve liderar tratativas preventivas e reforço de orientação.",
+    ],
+    dataset_contexto: {
+        total_registros: 1033,
+        total_eventos_historicos: 1033,
+        motoristas_monitorados: 138,
+        localidades_monitoradas: 143,
+        tipos_evento_monitorados: 4,
+        janela_historica_inicio: "2025-04-13",
+        janela_historica_fim: "2025-10-11",
+        ultima_atualizacao_arquivo: "2026-03-20 08:32",
+        motoristas_desligados_filtrados: 18,
+    },
+    meta: {
+        backend: "demo-payload",
+        forecast_days: 45,
+        recent_history_days: 14,
+        predictor_mode: "demo",
+    },
+};
+
 const refs = {};
 const state = {
     apiBaseUrl: "",
     health: null,
     prediction: null,
+    session: null,
+    demoMode: urlParams.get("demo") === "1",
+    demoRole: urlParams.get("demoRole") || "analista",
 };
 
 
 document.addEventListener("DOMContentLoaded", async () => {
     cacheRefs();
-    state.apiBaseUrl = resolveBackendUrl();
     bindEvents();
-    await bootstrapDashboard();
+    state.apiBaseUrl = resolveBackendUrl();
+
+    if (state.demoMode) {
+        activateDemoMode();
+        return;
+    }
+
+    setSystemStatus("Conectando ao backend preditivo");
+    await loadHealth();
+
+    const restoredSession = await restoreSession();
+    if (restoredSession) {
+        showAppShell();
+        await loadPrediction();
+        await loadAdminDirectory();
+    } else {
+        showAuthGate();
+    }
 });
 
 
 function cacheRefs() {
+    refs.authGate = document.getElementById("authGate");
+    refs.appShell = document.getElementById("appShell");
+    refs.loginForm = document.getElementById("loginForm");
+    refs.emailInput = document.getElementById("emailInput");
+    refs.passwordInput = document.getElementById("passwordInput");
+    refs.loginButton = document.getElementById("loginButton");
+    refs.loginMessage = document.getElementById("loginMessage");
+    refs.sessionShell = document.getElementById("sessionShell");
+    refs.sessionRoleLabel = document.getElementById("sessionRoleLabel");
+    refs.sessionUserLabel = document.getElementById("sessionUserLabel");
+    refs.logoutButton = document.getElementById("logoutButton");
+
     refs.form = document.getElementById("predictionForm");
     refs.predictionDateInput = document.getElementById("predictionDate");
     refs.fetchDataButton = document.getElementById("fetchDataButton");
@@ -72,107 +247,135 @@ function cacheRefs() {
     refs.localitiesList = document.getElementById("localitiesList");
     refs.eventTypesBars = document.getElementById("eventTypesBars");
     refs.eventBreakdownGrid = document.getElementById("eventBreakdownGrid");
+    refs.adminPanel = document.getElementById("adminPanel");
+    refs.usersDirectoryList = document.getElementById("usersDirectoryList");
 }
 
 
 function bindEvents() {
+    refs.loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        await login();
+    });
+
     refs.form.addEventListener("submit", async (event) => {
         event.preventDefault();
         await loadPrediction();
     });
+
+    refs.logoutButton.addEventListener("click", async () => {
+        await logout();
+    });
 }
 
 
-async function bootstrapDashboard() {
-    setSystemStatus("Conectando ao backend preditivo");
-    setLoading(true);
-    clearError();
-
-    try {
-        await loadHealth();
-    } catch (error) {
-        refs.predictionDateInput.value =
-            refs.predictionDateInput.value || formatInputDate(addDays(new Date(), 1));
-        setSystemStatus("Healthcheck indisponivel, tentando consulta direta");
-    }
-
-    await loadPrediction();
+function activateDemoMode() {
+    state.health = DEMO_HEALTH;
+    applySession(
+        {
+            access_token: "demo-token",
+            user: buildDemoUser(state.demoRole),
+        },
+        false
+    );
+    refs.predictionDateInput.value = DEMO_HEALTH.suggested_prediction_date;
+    renderHealthContext(DEMO_HEALTH);
+    showAppShell();
+    state.prediction = buildDemoPrediction(refs.predictionDateInput.value);
+    renderDashboard(state.prediction);
+    refs.predictionResultsSection.classList.remove("hidden");
+    renderUsersDirectory(state.demoRole === "admin" ? DEMO_USERS : []);
+    setSystemStatus("Modo demo ativo para apresentação e screenshots");
 }
 
 
-function resolveBackendUrl() {
-    const queryApi = new URLSearchParams(window.location.search).get("api");
-    if (queryApi) {
-        return queryApi.replace(/\/$/, "");
-    }
+function buildDemoUser(role) {
+    const fallbackUser = DEMO_USERS.find((user) => user.role === "analista");
+    const selectedUser = DEMO_USERS.find((user) => user.role === role) || fallbackUser;
+    return {
+        ...selectedUser,
+        role_description: "Sessão demonstrativa carregada localmente.",
+    };
+}
 
-    if (window.location.protocol === "file:") {
-        return FALLBACK_BACKEND_URL;
-    }
 
-    if (["localhost", "127.0.0.1"].includes(window.location.hostname)) {
-        return "http://127.0.0.1:5000";
-    }
-
-    return FALLBACK_BACKEND_URL;
+function buildDemoPrediction(selectedDate) {
+    const clonedPayload = JSON.parse(JSON.stringify(DEMO_TEMPLATE));
+    clonedPayload.data_previsao = selectedDate || DEMO_HEALTH.suggested_prediction_date;
+    return clonedPayload;
 }
 
 
 async function loadHealth() {
-    const response = await fetch(`${state.apiBaseUrl}/health`);
-    if (!response.ok) {
-        throw new Error("Nao foi possivel consultar a saude do backend.");
+    try {
+        const response = await fetch(`${state.apiBaseUrl}/health`);
+        if (!response.ok) {
+            throw new Error("Não foi possível consultar a saúde do backend.");
+        }
+
+        state.health = await response.json();
+        renderHealthContext(state.health);
+        setSystemStatus(
+            state.health.model_ready
+                ? "Backend pronto para autenticação e previsão"
+                : "Backend conectado, aguardando preparo do modelo"
+        );
+    } catch (_error) {
+        setSystemStatus("Healthcheck indisponível, aguardando autenticação manual");
     }
-
-    state.health = await response.json();
-    const health = state.health;
-
-    setSystemStatus(
-        health.model_ready
-            ? "Motor preditivo pronto para consulta"
-            : "Backend conectado, mas o modelo ainda nao esta pronto"
-    );
-
-    if (!refs.predictionDateInput.value && health.suggested_prediction_date) {
-        refs.predictionDateInput.value = health.suggested_prediction_date;
-    } else if (!refs.predictionDateInput.value) {
-        refs.predictionDateInput.value = formatInputDate(addDays(new Date(), 1));
-    }
-
-    if (health.suggested_prediction_date && health.forecast_days) {
-        const forecastStart = parseIsoDate(health.suggested_prediction_date);
-        const forecastEnd = addDays(forecastStart, health.forecast_days - 1);
-        refs.forecastWindowLabel.textContent =
-            `${formatDate(health.suggested_prediction_date)} ate ${formatDate(formatInputDate(forecastEnd))}`;
-    }
-
-    if (health.historical_window?.start && health.historical_window?.end) {
-        refs.historicalWindowValue.textContent =
-            `${formatDate(health.historical_window.start)} ate ${formatDate(health.historical_window.end)}`;
-    }
-
-    refs.recordsValue.textContent = formatCompact(health.records_loaded);
-    refs.controlHelperText.textContent = health.suggested_prediction_date
-        ? "A data inicial foi posicionada automaticamente na primeira janela de previsao disponivel."
-        : "Selecione uma data dentro da janela prevista pelo modelo.";
 }
 
 
-async function loadPrediction() {
-    const selectedDate = refs.predictionDateInput.value;
-    if (!selectedDate) {
-        handleError({
-            message: "Selecione uma data para atualizar o painel.",
-            details: "A previsao depende de uma data no formato YYYY-MM-DD.",
+async function restoreSession() {
+    const token = window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
+    if (!token) {
+        return false;
+    }
+
+    try {
+        const response = await fetch(`${state.apiBaseUrl}/auth/me`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         });
+
+        if (!response.ok) {
+            clearSession();
+            return false;
+        }
+
+        const session = await response.json();
+        applySession(session, false);
+        setLoginMessage("Sessão restaurada com sucesso.", "success");
+        return true;
+    } catch (_error) {
+        clearSession();
+        return false;
+    }
+}
+
+
+async function login() {
+    const email = refs.emailInput.value.trim();
+    const password = refs.passwordInput.value;
+
+    if (!email || !password) {
+        setLoginMessage("Informe e-mail e senha para continuar.", "error");
         return;
     }
 
-    setLoading(true);
-    clearError();
+    refs.loginButton.disabled = true;
+    refs.loginButton.textContent = "Entrando...";
+    setLoginMessage("Validando credenciais e perfil...", null);
 
     try {
-        const response = await fetch(`${state.apiBaseUrl}/predict?date=${selectedDate}`);
+        const response = await fetch(`${state.apiBaseUrl}/auth/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+        });
         const payload = await response.json();
 
         if (!response.ok) {
@@ -182,15 +385,179 @@ async function loadPrediction() {
             };
         }
 
-        state.prediction = payload;
-        renderDashboard(payload);
-        refs.predictionResultsSection.classList.remove("hidden");
-        setSystemStatus("Painel sincronizado com a ultima previsao");
+        applySession(payload, true);
+        showAppShell();
+        setLoginMessage("Acesso concedido. Carregando o painel protegido...", "success");
+        await loadPrediction();
+        await loadAdminDirectory();
     } catch (error) {
-        handleError(error);
+        const errorMessage = error?.payload?.error || "Não foi possível autenticar este usuário.";
+        setLoginMessage(errorMessage, "error");
+        setSystemStatus("Falha na autenticação");
+    } finally {
+        refs.loginButton.disabled = false;
+        refs.loginButton.textContent = "Entrar no painel";
+    }
+}
+
+
+async function logout() {
+    if (!state.demoMode && state.session?.access_token) {
+        try {
+            await fetch(`${state.apiBaseUrl}/auth/logout`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${state.session.access_token}`,
+                },
+            });
+        } catch (_error) {
+        }
+    }
+
+    clearSession();
+    showAuthGate();
+    refs.loginForm.reset();
+    refs.adminPanel.classList.add("hidden");
+    refs.usersDirectoryList.innerHTML = "";
+    setLoginMessage("Sessão encerrada com sucesso.", "success");
+    setSystemStatus("Aguardando autenticação");
+}
+
+
+function applySession(session, persistToken) {
+    state.session = session;
+    refs.sessionShell.classList.remove("hidden");
+    refs.sessionRoleLabel.textContent = session.user.role_title || session.user.role;
+    refs.sessionUserLabel.textContent = session.user.name;
+
+    if (!state.demoMode && persistToken) {
+        window.localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, session.access_token);
+    }
+}
+
+
+function clearSession() {
+    state.session = null;
+    refs.sessionShell.classList.add("hidden");
+    window.localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
+}
+
+
+async function loadPrediction() {
+    if (!state.demoMode && !state.session?.access_token) {
+        showAuthGate();
+        setLoginMessage("Faça login para consultar previsões protegidas.", "error");
+        return;
+    }
+
+    const selectedDate = refs.predictionDateInput.value || state.health?.suggested_prediction_date;
+    if (!selectedDate) {
+        handlePredictionError({
+            message: "Selecione uma data para consultar a previsão.",
+            details: "A consulta depende de uma data no formato YYYY-MM-DD.",
+        });
+        return;
+    }
+
+    refs.predictionDateInput.value = selectedDate;
+    setLoading(true);
+    clearPredictionError();
+
+    try {
+        if (state.demoMode) {
+            state.prediction = buildDemoPrediction(selectedDate);
+        } else {
+            const response = await fetch(`${state.apiBaseUrl}/predict?date=${selectedDate}`, {
+                headers: {
+                    Authorization: `Bearer ${state.session.access_token}`,
+                },
+            });
+            const payload = await response.json();
+
+            if (response.status === 401 || response.status === 403) {
+                clearSession();
+                showAuthGate();
+                setLoginMessage("Sua sessão expirou ou o perfil não possui acesso a este painel.", "error");
+                return;
+            }
+
+            if (!response.ok) {
+                throw {
+                    status: response.status,
+                    payload,
+                };
+            }
+
+            state.prediction = payload;
+        }
+
+        renderDashboard(state.prediction);
+        refs.predictionResultsSection.classList.remove("hidden");
+        setSystemStatus("Painel sincronizado com a última previsão");
+    } catch (error) {
+        handlePredictionError(error);
     } finally {
         setLoading(false);
     }
+}
+
+
+async function loadAdminDirectory() {
+    if (!state.session || state.session.user.role !== "admin") {
+        refs.adminPanel.classList.add("hidden");
+        refs.usersDirectoryList.innerHTML = "";
+        return;
+    }
+
+    if (state.demoMode) {
+        renderUsersDirectory(DEMO_USERS);
+        return;
+    }
+
+    try {
+        const response = await fetch(`${state.apiBaseUrl}/auth/users`, {
+            headers: {
+                Authorization: `Bearer ${state.session.access_token}`,
+            },
+        });
+        const payload = await response.json();
+
+        if (!response.ok) {
+            throw new Error(payload.error || "Não foi possível carregar o diretório de usuários.");
+        }
+
+        renderUsersDirectory(payload.users || []);
+    } catch (_error) {
+        renderUsersDirectory([]);
+    }
+}
+
+
+function renderHealthContext(health) {
+    if (!health) {
+        return;
+    }
+
+    if (!refs.predictionDateInput.value && health.suggested_prediction_date) {
+        refs.predictionDateInput.value = health.suggested_prediction_date;
+    }
+
+    if (health.suggested_prediction_date && health.forecast_days) {
+        const forecastStart = parseIsoDate(health.suggested_prediction_date);
+        const forecastEnd = addDays(forecastStart, health.forecast_days - 1);
+        refs.forecastWindowLabel.textContent =
+            `${formatDate(health.suggested_prediction_date)} até ${formatDate(formatInputDate(forecastEnd))}`;
+    }
+
+    if (health.historical_window?.start && health.historical_window?.end) {
+        refs.historicalWindowValue.textContent =
+            `${formatDate(health.historical_window.start)} até ${formatDate(health.historical_window.end)}`;
+    }
+
+    refs.recordsValue.textContent = formatCompact(health.records_loaded);
+    refs.controlHelperText.textContent = health.suggested_prediction_date
+        ? "A data inicial foi posicionada automaticamente na primeira janela de previsão disponível."
+        : "Selecione uma data dentro da janela prevista pelo modelo.";
 }
 
 
@@ -206,7 +573,7 @@ function renderDashboard(payload) {
         {
             labelKey: "Motorista",
             subtitle: (item) =>
-                `${formatPercent(item.ParticipacaoPercentual)} do historico | ${formatDecimal(item.EventosEsperados)} eventos esperados`,
+                `${formatPercent(item.ParticipacaoPercentual)} do histórico | ${formatDecimal(item.EventosEsperados)} eventos esperados`,
         }
     );
     renderRankedStack(
@@ -215,7 +582,7 @@ function renderDashboard(payload) {
         {
             labelKey: "Localidade",
             subtitle: (item) =>
-                `${formatPercent(item.ParticipacaoPercentual)} de concentracao | ${formatDecimal(item.EventosEsperados)} eventos esperados`,
+                `${formatPercent(item.ParticipacaoPercentual)} de concentração | ${formatDecimal(item.EventosEsperados)} eventos esperados`,
         }
     );
     renderEventTypes(payload.top_tipos_evento || []);
@@ -227,17 +594,17 @@ function renderContext(payload) {
     const context = payload.dataset_contexto || {};
 
     refs.forecastWindowLabel.textContent =
-        `${formatDate(payload.forecast_period_start)} ate ${formatDate(payload.forecast_period_end)}`;
-    refs.lastUpdatedLabel.textContent = context.ultima_atualizacao_arquivo || "Nao informado";
+        `${formatDate(payload.forecast_period_start)} até ${formatDate(payload.forecast_period_end)}`;
+    refs.lastUpdatedLabel.textContent = context.ultima_atualizacao_arquivo || "Não informado";
     refs.historicalWindowValue.textContent =
         context.janela_historica_inicio && context.janela_historica_fim
-            ? `${formatDate(context.janela_historica_inicio)} ate ${formatDate(context.janela_historica_fim)}`
+            ? `${formatDate(context.janela_historica_inicio)} até ${formatDate(context.janela_historica_fim)}`
             : "-";
     refs.recordsValue.textContent = formatCompact(context.total_registros);
     refs.driversValue.textContent = formatCompact(context.motoristas_monitorados);
     refs.eventTypesValue.textContent = formatCompact(context.tipos_evento_monitorados);
     refs.controlHelperText.textContent =
-        `Janela prevista: ${formatDate(payload.forecast_period_start)} ate ${formatDate(payload.forecast_period_end)}.`;
+        `Janela prevista: ${formatDate(payload.forecast_period_start)} até ${formatDate(payload.forecast_period_end)}.`;
 }
 
 
@@ -249,19 +616,19 @@ function renderMetrics(payload) {
     ].filter(Boolean);
 
     refs.forecastTotalValue.textContent = formatDecimal(payload.previsao_total_yhat1);
-    refs.forecastDateValue.textContent = `Cenario de ${formatDate(payload.data_previsao)}`;
+    refs.forecastDateValue.textContent = `Cenário de ${formatDate(payload.data_previsao)}`;
     refs.riskLevelValue.textContent = formatRisk(summary.nivel_risco);
     refs.riskVariationValue.textContent = summary.variacao_media_percentual === null
         ? "Sem comparativo"
-        : `${formatSignedPercent(summary.variacao_media_percentual)} vs media diaria`;
+        : `${formatSignedPercent(summary.variacao_media_percentual)} vs média diária`;
     refs.historicalAverageValue.textContent = formatDecimal(summary.media_diaria_historica);
     refs.historicalPeakValue.textContent = summary.pico_diario_historico === null
-        ? "Pico historico indisponivel"
-        : `Pico historico: ${formatDecimal(summary.pico_diario_historico)} eventos/dia`;
-    refs.priorityTargetValue.textContent = summary.motorista_prioritario || "Sem motorista critico";
+        ? "Pico histórico indisponível"
+        : `Pico histórico: ${formatDecimal(summary.pico_diario_historico)} eventos/dia`;
+    refs.priorityTargetValue.textContent = summary.motorista_prioritario || "Sem motorista crítico";
     refs.prioritySupportValue.textContent = priorityPieces.length
         ? priorityPieces.join(" | ")
-        : "Aguardando identificacao de hotspot";
+        : "Aguardando identificação de hotspot";
 }
 
 
@@ -270,19 +637,19 @@ function renderExecutivePanel(payload) {
     const insights = payload.insights_prioritarios || [];
     const recentSeries = payload.serie_historica_recente || [];
 
-    refs.executiveTitle.textContent = `Cenario para ${formatDate(payload.data_previsao)}`;
+    refs.executiveTitle.textContent = `Cenário para ${formatDate(payload.data_previsao)}`;
     refs.executiveSummary.textContent =
         insights[0] ||
-        `A previsao aponta ${formatDecimal(payload.previsao_total_yhat1)} eventos para a data selecionada.`;
+        `A previsão aponta ${formatDecimal(payload.previsao_total_yhat1)} eventos para a data selecionada.`;
 
     refs.riskPill.textContent = formatRisk(summary.nivel_risco);
     refs.riskPill.dataset.risk = summary.nivel_risco || "";
 
     if (recentSeries.length > 0) {
         refs.trendWindowLabel.textContent =
-            `${formatDate(recentSeries[0].data)} ate ${formatDate(recentSeries[recentSeries.length - 1].data)}`;
+            `${formatDate(recentSeries[0].data)} até ${formatDate(recentSeries[recentSeries.length - 1].data)}`;
     } else {
-        refs.trendWindowLabel.textContent = "Sem serie recente";
+        refs.trendWindowLabel.textContent = "Sem série recente";
     }
 
     renderTrendBars(recentSeries);
@@ -293,7 +660,7 @@ function renderInsights(insights) {
     refs.insightsList.innerHTML = "";
 
     if (!insights.length) {
-        refs.insightsList.appendChild(createEmptyListItem("Nenhum insight prioritario foi retornado."));
+        refs.insightsList.appendChild(createEmptyListItem("Nenhum insight prioritário foi retornado."));
         return;
     }
 
@@ -309,7 +676,7 @@ function renderTrendBars(series) {
     refs.trendBars.innerHTML = "";
 
     if (!series.length) {
-        refs.trendBars.appendChild(createEmptyCard("Sem historico recente para montar a tendencia."));
+        refs.trendBars.appendChild(createEmptyCard("Sem histórico recente para montar a tendência."));
         return;
     }
 
@@ -342,7 +709,7 @@ function renderPodium(drivers) {
     const podiumDrivers = drivers.slice(0, 3);
 
     if (!podiumDrivers.length) {
-        refs.podiumGrid.appendChild(createEmptyCard("Nenhum motorista disponivel para o podio."));
+        refs.podiumGrid.appendChild(createEmptyCard("Nenhum motorista disponível para o pódio."));
         return;
     }
 
@@ -365,7 +732,7 @@ function renderPodium(drivers) {
         const support = document.createElement("span");
         support.className = "podium-support";
         support.textContent =
-            `${formatDecimal(driver.EventosEsperados)} eventos esperados | ${formatCompact(driver.VolumeHistorico)} registros historicos`;
+            `${formatDecimal(driver.EventosEsperados)} eventos esperados | ${formatCompact(driver.VolumeHistorico)} registros históricos`;
 
         card.append(rank, name, value, support);
         refs.podiumGrid.appendChild(card);
@@ -377,7 +744,7 @@ function renderRankedStack(container, items, options) {
     container.innerHTML = "";
 
     if (!items.length) {
-        container.appendChild(createEmptyCard("Nao ha dados suficientes para exibir esta lista."));
+        container.appendChild(createEmptyCard("Não há dados suficientes para exibir esta lista."));
         return;
     }
 
@@ -417,7 +784,7 @@ function renderRankedStack(container, items, options) {
 
         const footer = document.createElement("div");
         footer.className = "stack-item-footer";
-        footer.textContent = `${formatCompact(item.VolumeHistorico)} ocorrencias historicas consideradas`;
+        footer.textContent = `${formatCompact(item.VolumeHistorico)} ocorrências históricas consideradas`;
 
         card.append(header, subtitle, progress, footer);
         container.appendChild(card);
@@ -465,7 +832,7 @@ function renderEventTypes(eventTypes) {
         const meta = document.createElement("p");
         meta.className = "bar-item-meta";
         meta.textContent =
-            `${formatDecimal(eventType.EventosEsperados)} eventos esperados | ${formatCompact(eventType.VolumeHistorico)} registros historicos`;
+            `${formatDecimal(eventType.EventosEsperados)} eventos esperados | ${formatCompact(eventType.VolumeHistorico)} registros históricos`;
 
         wrapper.append(header, track, meta);
         refs.eventTypesBars.appendChild(wrapper);
@@ -479,7 +846,7 @@ function renderEventBreakdown(eventGroups) {
 
     if (!entries.length) {
         refs.eventBreakdownGrid.appendChild(
-            createEmptyCard("O backend nao retornou detalhamento por tipo de evento.")
+            createEmptyCard("O backend não retornou detalhamento por tipo de evento.")
         );
         return;
     }
@@ -493,7 +860,7 @@ function renderEventBreakdown(eventGroups) {
         card.appendChild(title);
 
         if (!drivers.length) {
-            card.appendChild(createPlainText("Nenhum motorista disponivel para este recorte."));
+            card.appendChild(createPlainText("Nenhum motorista disponível para este recorte."));
             refs.eventBreakdownGrid.appendChild(card);
             return;
         }
@@ -508,7 +875,7 @@ function renderEventBreakdown(eventGroups) {
             const name = document.createElement("strong");
             name.textContent = driver.Motorista;
             const history = document.createElement("span");
-            history.textContent = `${formatCompact(driver.VolumeHistorico)} registros historicos`;
+            history.textContent = `${formatCompact(driver.VolumeHistorico)} registros históricos`;
             nameBlock.append(name, history);
 
             const values = document.createElement("div");
@@ -521,6 +888,46 @@ function renderEventBreakdown(eventGroups) {
 
         card.appendChild(list);
         refs.eventBreakdownGrid.appendChild(card);
+    });
+}
+
+
+function renderUsersDirectory(users) {
+    refs.usersDirectoryList.innerHTML = "";
+
+    if (!users.length) {
+        refs.adminPanel.classList.add("hidden");
+        return;
+    }
+
+    refs.adminPanel.classList.remove("hidden");
+    users.forEach((user) => {
+        const permissions = Array.isArray(user.permissions) ? user.permissions.join(" | ") : "";
+        const card = document.createElement("article");
+        card.className = "stack-item";
+
+        const header = document.createElement("div");
+        header.className = "stack-item-header";
+
+        const title = document.createElement("strong");
+        title.className = "stack-item-title";
+        title.textContent = `${user.name} (${user.role_title || user.role})`;
+
+        const status = document.createElement("span");
+        status.className = "stack-item-subtitle";
+        status.textContent = user.active ? "Ativo" : "Inativo";
+
+        const email = document.createElement("p");
+        email.className = "stack-item-subtitle";
+        email.textContent = user.email;
+
+        const footer = document.createElement("div");
+        footer.className = "stack-item-footer";
+        footer.textContent = permissions || "Sem permissões cadastradas";
+
+        header.append(title, status);
+        card.append(header, email, footer);
+        refs.usersDirectoryList.appendChild(card);
     });
 }
 
@@ -541,23 +948,48 @@ function setLoading(isLoading) {
 }
 
 
+function showAuthGate() {
+    refs.authGate.classList.remove("hidden");
+    refs.appShell.classList.add("hidden");
+}
+
+
+function showAppShell() {
+    refs.authGate.classList.add("hidden");
+    refs.appShell.classList.remove("hidden");
+}
+
+
 function setSystemStatus(message) {
     refs.systemStatusLabel.textContent = message;
 }
 
 
-function clearError() {
+function setLoginMessage(message, type) {
+    refs.loginMessage.textContent = message;
+    refs.loginMessage.classList.remove("is-error", "is-success");
+
+    if (type === "error") {
+        refs.loginMessage.classList.add("is-error");
+    }
+    if (type === "success") {
+        refs.loginMessage.classList.add("is-success");
+    }
+}
+
+
+function clearPredictionError() {
     refs.errorDisplaySection.classList.add("hidden");
     refs.errorMessage.textContent = "";
     refs.errorDetails.textContent = "";
 }
 
 
-function handleError(error) {
+function handlePredictionError(error) {
     const payload = error?.payload || null;
     const status = error?.status || null;
 
-    let message = error?.message || "Nao foi possivel montar o painel preditivo.";
+    let message = error?.message || "Não foi possível montar o painel preditivo.";
     let details = "Confira a conectividade com o backend ou escolha outra data.";
 
     if (payload?.error) {
@@ -566,13 +998,13 @@ function handleError(error) {
 
     if (status === 404 && payload?.forecast_period_start && payload?.forecast_period_end) {
         details =
-            `A data escolhida esta fora da janela prevista. Use um intervalo entre ${formatDate(payload.forecast_period_start)} e ${formatDate(payload.forecast_period_end)}.`;
+            `A data escolhida está fora da janela prevista. Use um intervalo entre ${formatDate(payload.forecast_period_start)} e ${formatDate(payload.forecast_period_end)}.`;
         refs.predictionDateInput.value = payload.forecast_period_start;
     } else if (status === 400) {
         details = "A API espera datas no formato YYYY-MM-DD.";
     } else if (payload?.forecast_period_start && payload?.forecast_period_end) {
         details =
-            `Janela atual de previsao: ${formatDate(payload.forecast_period_start)} ate ${formatDate(payload.forecast_period_end)}.`;
+            `Janela atual de previsão: ${formatDate(payload.forecast_period_start)} até ${formatDate(payload.forecast_period_end)}.`;
     } else if (payload?.requested_date) {
         details = `Data solicitada: ${payload.requested_date}.`;
     } else if (error?.details) {
@@ -610,6 +1042,24 @@ function createPlainText(message) {
 }
 
 
+function resolveBackendUrl() {
+    const queryApi = urlParams.get("api");
+    if (queryApi) {
+        return queryApi.replace(/\/$/, "");
+    }
+
+    if (window.location.protocol === "file:") {
+        return FALLBACK_BACKEND_URL;
+    }
+
+    if (["localhost", "127.0.0.1"].includes(window.location.hostname)) {
+        return "http://127.0.0.1:5000";
+    }
+
+    return FALLBACK_BACKEND_URL;
+}
+
+
 function parseIsoDate(value) {
     if (!value) {
         return null;
@@ -629,7 +1079,7 @@ function addDays(dateValue, amount) {
 
 function formatDate(value) {
     const date = parseIsoDate(value);
-    return date ? dateFormatter.format(date) : "Nao informado";
+    return date ? dateFormatter.format(date) : "Não informado";
 }
 
 
@@ -688,6 +1138,6 @@ function formatRisk(level) {
         case "controlado":
             return "Risco controlado";
         default:
-            return "Em analise";
+            return "Em análise";
     }
 }
