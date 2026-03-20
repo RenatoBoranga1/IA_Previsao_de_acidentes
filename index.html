@@ -5,46 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta
         name="description"
-        content="Painel preditivo de prevencao de acidentes com autenticacao por perfil, visao executiva e detalhamento operacional."
+        content="Painel preditivo de prevenção de acidentes com autenticação por perfil, visão executiva e detalhamento operacional."
     >
-    <title>Radar de Prevencao Operacional</title>
+    <title>Radar de Prevenção Operacional</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
         rel="stylesheet"
     >
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="promo-bar">
-        <div class="shell promo-bar-shell">
-            <p>Prevencao premium para operacoes logistic as com leitura clara, segura e acionavel.</p>
-            <div class="promo-bar-meta" aria-label="Diferenciais">
-                <span>Forecast por perfil</span>
-                <span>Leitura executiva</span>
-                <span>Autenticacao protegida</span>
-            </div>
-        </div>
-    </div>
-
-    <header class="site-header">
-        <div class="shell header-shell">
+    <div class="page-shell">
+        <header class="topbar">
             <div class="brand-block">
-                <img src="logo_ritmo.png" alt="Logotipo da operacao" class="brand-logo">
-                <div class="brand-copy">
-                    <p class="eyebrow">Radar Preventivo</p>
-                    <h1>Prevencao<br>Operacional</h1>
+                <img src="logo_ritmo.png" alt="Logotipo da operação" class="brand-logo">
+                <div>
+                    <p class="eyebrow">IA de prevenção de acidentes</p>
+                    <h1>Radar de Prevenção Operacional</h1>
                 </div>
             </div>
-
-            <nav class="site-nav" aria-label="Navegacao principal">
-                <a href="#heroStage" class="is-active">Inicio</a>
-                <a href="#authGate">Acesso</a>
-                <a href="#appShell">Painel</a>
-                <a href="#predictionResults">Analitico</a>
-                <a href="#footer">Contato</a>
-            </nav>
 
             <div class="topbar-actions">
                 <div class="topbar-status">
@@ -55,374 +36,277 @@
                 <div id="sessionShell" class="session-shell hidden">
                     <div class="session-copy">
                         <span class="session-role" id="sessionRoleLabel">Perfil</span>
-                        <strong id="sessionUserLabel">Usuario</strong>
+                        <strong id="sessionUserLabel">Usuário</strong>
                     </div>
                     <button type="button" id="logoutButton" class="ghost-button">Sair</button>
                 </div>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <section id="heroStage" class="hero-stage">
-        <div class="shell hero-stage-shell">
-            <div class="hero-stage-copy">
-                <p class="section-tag">Novo padrao visual</p>
-                <h2>Antecipe acidentes com uma interface elegante, clara e orientada a decisao.</h2>
-                <p class="hero-description">
-                    A nova vitrine do projeto combina autenticacao, previsao diaria,
-                    hotspots e leitura gerencial em uma experiencia mais refinada,
-                    inspirada em layouts editoriais de alto nivel.
-                </p>
-
-                <div class="hero-stage-actions">
-                    <a class="primary-link" href="#authGate">Entrar no painel</a>
-                    <a class="secondary-link" href="#appShell">Explorar estrutura</a>
-                </div>
-
-                <div class="hero-badges">
-                    <span class="hero-badge">Visao executiva</span>
-                    <span class="hero-badge">Forecast protegido</span>
-                    <span class="hero-badge">Dashboard responsivo</span>
-                </div>
-            </div>
-
-            <div class="hero-stage-visual" aria-hidden="true">
-                <div class="visual-stage">
-                    <div class="visual-card visual-card-main">
-                        <span class="visual-tag">Colecao operacional</span>
-                        <strong>Painel curado para risco, prioridade e acao</strong>
-                        <p>Um unico panorama com leitura diaria, ranking de motoristas e hotspots de localidade.</p>
-                    </div>
-
-                    <div class="visual-badge visual-badge-top">
-                        <span>Risco atual</span>
-                        <strong>Moderado</strong>
-                    </div>
-
-                    <div class="visual-badge visual-badge-bottom">
-                        <span>Perfis ativos</span>
-                        <strong>Admin | Gestor | Analista</strong>
-                    </div>
-
-                    <div class="visual-portrait">
-                        <div class="visual-portrait-ring"></div>
-                        <div class="visual-portrait-panel">
-                            <img src="logo_ritmo.png" alt="Marca do projeto" class="visual-mark">
-                            <div>
-                                <p class="mini-label">Radar</p>
-                                <h3>Prevencao de acidentes com leitura premium.</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="trust-strip" aria-label="Beneficios da plataforma">
-        <div class="shell trust-grid">
-            <article class="trust-item">
-                <span class="trust-icon">01</span>
-                <h3>Governanca segura</h3>
-                <p>Perfis controlados para cada camada da operacao.</p>
-            </article>
-            <article class="trust-item">
-                <span class="trust-icon">02</span>
-                <h3>Leitura imediata</h3>
-                <p>KPIs e recortes prontos para decisao de rotina.</p>
-            </article>
-            <article class="trust-item">
-                <span class="trust-icon">03</span>
-                <h3>Historico acionavel</h3>
-                <p>Tendencias, hotspots e ranking em uma mesma tela.</p>
-            </article>
-            <article class="trust-item">
-                <span class="trust-icon">04</span>
-                <h3>Deploy profissional</h3>
-                <p>Estrutura pronta para ambiente autenticado e online.</p>
-            </article>
-        </div>
-    </section>
-
-    <main class="shell main-shell">
-        <section id="authGate" class="auth-shell">
-            <div class="auth-copy">
-                <p class="section-tag">Acesso controlado</p>
-                <h2>Entre com o perfil certo e entregue a leitura certa para cada papel da operacao.</h2>
-                <p class="hero-description">
-                    O login protege a API, separa a experiencia entre administrador,
-                    gestor e analista e sustenta um dashboard com cara de produto profissional.
-                </p>
-
-                <div class="access-role-grid">
-                    <article class="role-card">
-                        <span class="role-pill">Administrador</span>
-                        <h3>Governanca e acesso</h3>
-                        <p>Consulta o dashboard, ve usuarios e controla o contexto de acesso.</p>
-                    </article>
-                    <article class="role-card">
-                        <span class="role-pill">Gestor</span>
-                        <h3>Leitura executiva</h3>
-                        <p>Enxerga risco, hotspots e prioridades para a operacao do dia.</p>
-                    </article>
-                    <article class="role-card">
-                        <span class="role-pill">Analista</span>
-                        <h3>Detalhamento tecnico</h3>
-                        <p>Explora rankings, eventos, serie recente e recortes por tipo.</p>
-                    </article>
-                </div>
-
-                <div class="credential-card">
-                    <p class="mini-label">Acesso rapido</p>
-                    <h3>Usuarios demo para validacao</h3>
-                    <p>Admin: <code>admin@radar.local</code> / <code>Admin123!</code></p>
-                    <p>Gestor: <code>gestor@radar.local</code> / <code>Gestor123!</code></p>
-                    <p>Analista: <code>analista@radar.local</code> / <code>Analista123!</code></p>
-                </div>
-            </div>
-
-            <form id="loginForm" class="auth-card">
-                <div class="control-card-header">
-                    <p class="section-tag">Login</p>
-                    <h3>Acessar painel protegido</h3>
-                </div>
-
-                <label class="control-label" for="emailInput">E-mail</label>
-                <input type="email" id="emailInput" placeholder="voce@empresa.com" autocomplete="username" required>
-
-                <label class="control-label" for="passwordInput">Senha</label>
-                <input type="password" id="passwordInput" placeholder="Sua senha" autocomplete="current-password" required>
-
-                <button type="submit" id="loginButton">Entrar no painel</button>
-
-                <p class="login-message" id="loginMessage">
-                    Use usuarios definidos em <code>auth_users.json</code> ou habilite demo no backend.
-                </p>
-                <p class="control-helper">
-                    Para apresentar sem backend, abra a pagina com <code>?demo=1</code>.
-                </p>
-            </form>
-        </section>
-
-        <section id="appShell" class="app-shell hidden">
-            <section class="hero">
-                <div class="hero-copy">
-                    <p class="section-tag">Sala de comando</p>
-                    <h2>
-                        Concentre previsao diaria, hotspots operacionais e alvos preventivos
-                        em um dashboard com linguagem visual consistente.
-                    </h2>
+        <main>
+            <section id="authGate" class="auth-shell">
+                <div class="auth-copy">
+                    <p class="section-tag">Acesso controlado</p>
+                    <h2>Autentique o perfil certo e entregue a visão certa para cada camada da operação.</h2>
                     <p class="hero-description">
-                        O painel combina forecast diario, leitura de risco, localidade critica,
-                        top motoristas e drilldown por evento para apoiar seguranca,
-                        lideranca operacional e analise tecnica.
+                        O novo fluxo separa administrador, gestor e analista, protegendo a API e
+                        ajustando o painel conforme o papel de acesso.
                     </p>
-                    <div class="hero-badges">
-                        <span class="hero-badge">Forecast com NeuralProphet</span>
-                        <span class="hero-badge">Perfis autenticados</span>
-                        <span class="hero-badge">Leitura pronta para acao</span>
+
+                    <div class="access-role-grid">
+                        <article class="role-card">
+                            <span class="role-pill">Administrador</span>
+                            <h3>Governança e acesso</h3>
+                            <p>Consulta o dashboard e visualiza o diretório de usuários e permissões.</p>
+                        </article>
+                        <article class="role-card">
+                            <span class="role-pill">Gestor</span>
+                            <h3>Leitura executiva</h3>
+                            <p>Foca em risco, hotspots e priorização operacional por data prevista.</p>
+                        </article>
+                        <article class="role-card">
+                            <span class="role-pill">Analista</span>
+                            <h3>Detalhamento técnico</h3>
+                            <p>Explora rankings, drilldowns por evento e evolução histórica recente.</p>
+                        </article>
                     </div>
                 </div>
 
-                <form id="predictionForm" class="control-card">
+                <form id="loginForm" class="auth-card">
                     <div class="control-card-header">
-                        <p class="section-tag">Simulacao de risco</p>
-                        <h3>Consultar data prevista</h3>
+                        <p class="section-tag">Login</p>
+                        <h3>Acessar painel protegido</h3>
                     </div>
 
-                    <label class="control-label" for="predictionDate">Data da previsao</label>
-                    <input type="date" id="predictionDate" required>
+                    <label class="control-label" for="emailInput">E-mail</label>
+                    <input type="email" id="emailInput" placeholder="voce@empresa.com" autocomplete="username" required>
 
-                    <button type="submit" id="fetchDataButton">Atualizar painel</button>
+                    <label class="control-label" for="passwordInput">Senha</label>
+                    <input type="password" id="passwordInput" placeholder="Sua senha" autocomplete="current-password" required>
 
-                    <div class="control-meta">
-                        <div>
-                            <span>Janela sugerida</span>
-                            <strong id="forecastWindowLabel">Carregando...</strong>
-                        </div>
-                        <div>
-                            <span>Ultima atualizacao</span>
-                            <strong id="lastUpdatedLabel">Aguardando dados</strong>
-                        </div>
-                    </div>
+                    <button type="submit" id="loginButton">Entrar no painel</button>
 
-                    <p id="controlHelperText" class="control-helper">
-                        O sistema vai sugerir automaticamente a primeira data disponivel.
+                    <p class="login-message" id="loginMessage">
+                        Use usuários definidos em <code>auth_users.json</code> ou habilite demo no backend.
+                    </p>
+                    <p class="control-helper">
+                        Para gerar screenshots locais sem backend, abra a página com <code>?demo=1</code>.
                     </p>
                 </form>
             </section>
 
-            <section class="context-strip" aria-label="Contexto operacional">
-                <article class="context-chip">
-                    <span class="chip-label">Base monitorada</span>
-                    <strong id="historicalWindowValue">-</strong>
-                </article>
-                <article class="context-chip">
-                    <span class="chip-label">Registros tratados</span>
-                    <strong id="recordsValue">-</strong>
-                </article>
-                <article class="context-chip">
-                    <span class="chip-label">Motoristas ativos</span>
-                    <strong id="driversValue">-</strong>
-                </article>
-                <article class="context-chip">
-                    <span class="chip-label">Tipos de evento</span>
-                    <strong id="eventTypesValue">-</strong>
-                </article>
+            <section id="appShell" class="app-shell hidden">
+                <section class="hero">
+                    <div class="hero-copy">
+                        <p class="section-tag">Centro de decisão</p>
+                        <h2>
+                            Antecipe pressão operacional, concentre ações preventivas e
+                            transforme o histórico em prioridade de campo.
+                        </h2>
+                        <p class="hero-description">
+                            O painel combina previsão diária, hotspots de localidade,
+                            leitura por tipo de evento e ranking de exposição para apoiar
+                            segurança, liderança operacional e tratativas em tempo certo.
+                        </p>
+                        <div class="hero-badges">
+                            <span class="hero-badge">Forecast com NeuralProphet</span>
+                            <span class="hero-badge">Autenticação por perfil</span>
+                            <span class="hero-badge">Interface orientada à decisão</span>
+                        </div>
+                    </div>
+
+                    <form id="predictionForm" class="control-card">
+                        <div class="control-card-header">
+                            <p class="section-tag">Simulação de risco</p>
+                            <h3>Consultar data prevista</h3>
+                        </div>
+
+                        <label class="control-label" for="predictionDate">Data da previsão</label>
+                        <input type="date" id="predictionDate" required>
+
+                        <button type="submit" id="fetchDataButton">Atualizar painel</button>
+
+                        <div class="control-meta">
+                            <div>
+                                <span>Janela sugerida</span>
+                                <strong id="forecastWindowLabel">Carregando...</strong>
+                            </div>
+                            <div>
+                                <span>Última atualização</span>
+                                <strong id="lastUpdatedLabel">Aguardando dados</strong>
+                            </div>
+                        </div>
+
+                        <p id="controlHelperText" class="control-helper">
+                            O sistema vai sugerir automaticamente a primeira data disponível.
+                        </p>
+                    </form>
+                </section>
+
+                <section class="context-strip" aria-label="Contexto operacional">
+                    <article class="context-chip">
+                        <span class="chip-label">Base monitorada</span>
+                        <strong id="historicalWindowValue">-</strong>
+                    </article>
+                    <article class="context-chip">
+                        <span class="chip-label">Registros tratados</span>
+                        <strong id="recordsValue">-</strong>
+                    </article>
+                    <article class="context-chip">
+                        <span class="chip-label">Motoristas ativos</span>
+                        <strong id="driversValue">-</strong>
+                    </article>
+                    <article class="context-chip">
+                        <span class="chip-label">Tipos de evento</span>
+                        <strong id="eventTypesValue">-</strong>
+                    </article>
+                </section>
+
+                <section class="metrics-grid" aria-label="Indicadores principais">
+                    <article class="metric-card metric-spotlight">
+                        <span class="metric-label">Previsão consolidada</span>
+                        <strong class="metric-value" id="forecastTotalValue">-</strong>
+                        <p class="metric-support" id="forecastDateValue">Selecione uma data</p>
+                    </article>
+
+                    <article class="metric-card">
+                        <span class="metric-label">Nível de risco</span>
+                        <strong class="metric-value" id="riskLevelValue">-</strong>
+                        <p class="metric-support" id="riskVariationValue">Aguardando cenário</p>
+                    </article>
+
+                    <article class="metric-card">
+                        <span class="metric-label">Média histórica diária</span>
+                        <strong class="metric-value" id="historicalAverageValue">-</strong>
+                        <p class="metric-support" id="historicalPeakValue">-</p>
+                    </article>
+
+                    <article class="metric-card">
+                        <span class="metric-label">Foco prioritário</span>
+                        <strong class="metric-value" id="priorityTargetValue">-</strong>
+                        <p class="metric-support" id="prioritySupportValue">Nenhum alvo definido</p>
+                    </article>
+                </section>
+
+                <section id="loading" class="loading-state hidden" aria-live="polite">
+                    <div class="loading-orb"></div>
+                    <div>
+                        <h3>Montando o panorama preditivo</h3>
+                        <p>Estamos consolidando indicadores, rankings e recortes por evento.</p>
+                    </div>
+                </section>
+
+                <section id="errorDisplay" class="error-panel hidden" aria-live="assertive">
+                    <div>
+                        <p class="section-tag">Falha de consulta</p>
+                        <h3 id="errorMessage">Não foi possível montar o painel.</h3>
+                        <p id="errorDetails">Verifique a data informada ou a disponibilidade do backend.</p>
+                    </div>
+                </section>
+
+                <section id="predictionResults" class="dashboard-grid hidden">
+                    <article class="panel panel-wide pulse-panel">
+                        <div class="panel-header">
+                            <div>
+                                <p class="section-tag">Leitura executiva</p>
+                                <h3 id="executiveTitle">Cenário preditivo</h3>
+                            </div>
+                            <span class="risk-pill" id="riskPill">Em análise</span>
+                        </div>
+                        <p class="executive-summary" id="executiveSummary">
+                            O resumo operacional será exibido assim que a previsão for carregada.
+                        </p>
+                        <div class="trend-header">
+                            <div>
+                                <span class="mini-label">Tendência recente</span>
+                                <strong>Últimos dias monitorados</strong>
+                            </div>
+                            <span class="mini-label" id="trendWindowLabel">-</span>
+                        </div>
+                        <div id="trendBars" class="trend-bars" aria-label="Série histórica recente"></div>
+                    </article>
+
+                    <article class="panel insights-panel">
+                        <div class="panel-header">
+                            <div>
+                                <p class="section-tag">Insights prioritários</p>
+                                <h3>O que agir primeiro</h3>
+                            </div>
+                        </div>
+                        <ul id="insightsList" class="insights-list"></ul>
+                    </article>
+
+                    <article class="panel podium-panel">
+                        <div class="panel-header">
+                            <div>
+                                <p class="section-tag">Motoristas críticos</p>
+                                <h3>Pódio de exposição histórica</h3>
+                            </div>
+                        </div>
+                        <div id="podiumGrid" class="podium-grid"></div>
+                    </article>
+
+                    <article class="panel ranking-panel">
+                        <div class="panel-header">
+                            <div>
+                                <p class="section-tag">Prioridade expandida</p>
+                                <h3>Top 10 motoristas monitorados</h3>
+                            </div>
+                        </div>
+                        <div id="topDriversList" class="stack-list"></div>
+                    </article>
+
+                    <article class="panel localities-panel">
+                        <div class="panel-header">
+                            <div>
+                                <p class="section-tag">Hotspots</p>
+                                <h3>Localidades com maior concentração</h3>
+                            </div>
+                        </div>
+                        <div id="localitiesList" class="stack-list"></div>
+                    </article>
+
+                    <article class="panel event-types-panel">
+                        <div class="panel-header">
+                            <div>
+                                <p class="section-tag">Pressão por evento</p>
+                                <h3>Tipos de evento com maior impacto</h3>
+                            </div>
+                        </div>
+                        <div id="eventTypesBars" class="bar-list"></div>
+                    </article>
+
+                    <article class="panel panel-full event-drilldown-panel">
+                        <div class="panel-header">
+                            <div>
+                                <p class="section-tag">Drilldown</p>
+                                <h3>Motoristas mais expostos por tipo de evento</h3>
+                            </div>
+                        </div>
+                        <div id="eventBreakdownGrid" class="event-breakdown-grid"></div>
+                    </article>
+
+                    <article id="adminPanel" class="panel panel-full hidden">
+                        <div class="panel-header">
+                            <div>
+                                <p class="section-tag">Administração</p>
+                                <h3>Diretório de usuários e perfis</h3>
+                            </div>
+                        </div>
+                        <div id="usersDirectoryList" class="stack-list"></div>
+                    </article>
+                </section>
             </section>
+        </main>
 
-            <section class="metrics-grid" aria-label="Indicadores principais">
-                <article class="metric-card metric-spotlight">
-                    <span class="metric-label">Previsao consolidada</span>
-                    <strong class="metric-value" id="forecastTotalValue">-</strong>
-                    <p class="metric-support" id="forecastDateValue">Selecione uma data</p>
-                </article>
-
-                <article class="metric-card">
-                    <span class="metric-label">Nivel de risco</span>
-                    <strong class="metric-value" id="riskLevelValue">-</strong>
-                    <p class="metric-support" id="riskVariationValue">Aguardando cenario</p>
-                </article>
-
-                <article class="metric-card">
-                    <span class="metric-label">Media historica diaria</span>
-                    <strong class="metric-value" id="historicalAverageValue">-</strong>
-                    <p class="metric-support" id="historicalPeakValue">-</p>
-                </article>
-
-                <article class="metric-card">
-                    <span class="metric-label">Foco prioritario</span>
-                    <strong class="metric-value" id="priorityTargetValue">-</strong>
-                    <p class="metric-support" id="prioritySupportValue">Nenhum alvo definido</p>
-                </article>
-            </section>
-
-            <section id="loading" class="loading-state hidden" aria-live="polite">
-                <div class="loading-orb"></div>
-                <div>
-                    <h3>Montando o panorama preditivo</h3>
-                    <p>Estamos consolidando indicadores, rankings e recortes por evento.</p>
-                </div>
-            </section>
-
-            <section id="errorDisplay" class="error-panel hidden" aria-live="assertive">
-                <div>
-                    <p class="section-tag">Falha de consulta</p>
-                    <h3 id="errorMessage">Nao foi possivel montar o painel.</h3>
-                    <p id="errorDetails">Verifique a data informada ou a disponibilidade do backend.</p>
-                </div>
-            </section>
-
-            <section id="predictionResults" class="dashboard-grid hidden">
-                <article class="panel panel-wide pulse-panel">
-                    <div class="panel-header">
-                        <div>
-                            <p class="section-tag">Leitura executiva</p>
-                            <h3 id="executiveTitle">Cenario preditivo</h3>
-                        </div>
-                        <span class="risk-pill" id="riskPill">Em analise</span>
-                    </div>
-                    <p class="executive-summary" id="executiveSummary">
-                        O resumo operacional sera exibido assim que a previsao for carregada.
-                    </p>
-                    <div class="trend-header">
-                        <div>
-                            <span class="mini-label">Tendencia recente</span>
-                            <strong>Ultimos dias monitorados</strong>
-                        </div>
-                        <span class="mini-label" id="trendWindowLabel">-</span>
-                    </div>
-                    <div id="trendBars" class="trend-bars" aria-label="Serie historica recente"></div>
-                </article>
-
-                <article class="panel insights-panel">
-                    <div class="panel-header">
-                        <div>
-                            <p class="section-tag">Insights prioritarios</p>
-                            <h3>O que agir primeiro</h3>
-                        </div>
-                    </div>
-                    <ul id="insightsList" class="insights-list"></ul>
-                </article>
-
-                <article class="panel podium-panel">
-                    <div class="panel-header">
-                        <div>
-                            <p class="section-tag">Motoristas criticos</p>
-                            <h3>Podio de exposicao historica</h3>
-                        </div>
-                    </div>
-                    <div id="podiumGrid" class="podium-grid"></div>
-                </article>
-
-                <article class="panel ranking-panel">
-                    <div class="panel-header">
-                        <div>
-                            <p class="section-tag">Prioridade expandida</p>
-                            <h3>Top 10 motoristas monitorados</h3>
-                        </div>
-                    </div>
-                    <div id="topDriversList" class="stack-list"></div>
-                </article>
-
-                <article class="panel localities-panel">
-                    <div class="panel-header">
-                        <div>
-                            <p class="section-tag">Hotspots</p>
-                            <h3>Localidades com maior concentracao</h3>
-                        </div>
-                    </div>
-                    <div id="localitiesList" class="stack-list"></div>
-                </article>
-
-                <article class="panel event-types-panel">
-                    <div class="panel-header">
-                        <div>
-                            <p class="section-tag">Pressao por evento</p>
-                            <h3>Tipos de evento com maior impacto</h3>
-                        </div>
-                    </div>
-                    <div id="eventTypesBars" class="bar-list"></div>
-                </article>
-
-                <article class="panel panel-full event-drilldown-panel">
-                    <div class="panel-header">
-                        <div>
-                            <p class="section-tag">Drilldown</p>
-                            <h3>Motoristas mais expostos por tipo de evento</h3>
-                        </div>
-                    </div>
-                    <div id="eventBreakdownGrid" class="event-breakdown-grid"></div>
-                </article>
-
-                <article id="adminPanel" class="panel panel-full hidden">
-                    <div class="panel-header">
-                        <div>
-                            <p class="section-tag">Administracao</p>
-                            <h3>Diretorio de usuarios e perfis</h3>
-                        </div>
-                    </div>
-                    <div id="usersDirectoryList" class="stack-list"></div>
-                </article>
-            </section>
-        </section>
-    </main>
-
-    <footer id="footer" class="footer">
-        <div class="shell footer-shell">
-            <div>
-                <p class="footer-tag">Projeto de Renato Boranga</p>
-                <h2>Radar de Prevencao Operacional</h2>
-            </div>
-            <div class="footer-copy">
-                <p>Frontend reformulado para uma experiencia mais sofisticada, responsiva e coerente com uma apresentacao profissional.</p>
-                <p>Estrutura pronta para login, dashboard e leitura executiva da operacao.</p>
-            </div>
-        </div>
-    </footer>
+        <footer class="footer">
+            <p>Projeto desenvolvido por Renato Boranga para inteligência preventiva em operações logísticas.</p>
+            <p>Frontend reformulado para uma experiência executiva, responsiva, autenticada e orientada à ação.</p>
+        </footer>
+    </div>
 
     <noscript>
-        Este painel precisa de JavaScript habilitado para autenticar usuarios e consultar previsoes.
+        Este painel precisa de JavaScript habilitado para autenticar usuários e consultar previsões.
     </noscript>
 
     <script src="script.js"></script>
