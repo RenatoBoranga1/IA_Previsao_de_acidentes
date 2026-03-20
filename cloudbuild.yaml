@@ -1,0 +1,51 @@
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _REGION: southamerica-east1
+  _REPOSITORY: ia-previsao-images
+  _SERVICE_NAME: ia-previsao-api
+  _MEMORY: 4Gi
+  _CPU: "2"
+  _TIMEOUT: "300"
+  _MIN_INSTANCES: "0"
+  _MAX_INSTANCES: "3"
+  _PREDICTOR_MODE: neuralprophet
+  _ALLOW_DEMO_USERS: "true"
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    id: Build image
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE_NAME}:$SHORT_SHA
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    id: Push image
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE_NAME}:$SHORT_SHA
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    id: Deploy to Cloud Run
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE_NAME}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE_NAME}:$SHORT_SHA
+      - --region=${_REGION}
+      - --platform=managed
+      - --port=8080
+      - --allow-unauthenticated
+      - --memory=${_MEMORY}
+      - --cpu=${_CPU}
+      - --timeout=${_TIMEOUT}
+      - --min-instances=${_MIN_INSTANCES}
+      - --max-instances=${_MAX_INSTANCES}
+      - --set-env-vars=APP_PREDICTOR_MODE=${_PREDICTOR_MODE},APP_ALLOW_DEMO_USERS=${_ALLOW_DEMO_USERS},APP_CORS_ORIGINS=*
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE_NAME}:$SHORT_SHA

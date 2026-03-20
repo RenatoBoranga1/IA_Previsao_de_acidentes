@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: ia-previsao-api
+    runtime: python
+    plan: free
+    autoDeploy: true
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 300 app_previsao:app
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: APP_ALLOW_DEMO_USERS
+        value: true
+      - key: APP_PREDICTOR_MODE
+        value: mock
+      - key: APP_CORS_ORIGINS
+        value: "*"
+      - key: APP_SECRET_KEY
+        generateValue: true
