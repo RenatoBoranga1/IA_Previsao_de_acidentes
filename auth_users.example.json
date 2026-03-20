@@ -1,0 +1,26 @@
+[
+  {
+    "id": "admin-demo",
+    "name": "Admin Demo",
+    "email": "admin@radar.local",
+    "role": "admin",
+    "password_hash": "pbkdf2_sha256$390000$3836a64731c487083b04c944a9948920$tYeVAn1jkJ0iPPTuGg93-a5dcE2t9VLuGF7Sb-9Fnp0",
+    "active": true
+  },
+  {
+    "id": "gestor-demo",
+    "name": "Gestor Demo",
+    "email": "gestor@radar.local",
+    "role": "gestor",
+    "password_hash": "pbkdf2_sha256$390000$bf22dd9a807be71e901196de65a2d50d$LRDHl1G-ICu0tMm7i7D4j_Qe8_W_yDYdWh3S0HiNFCM",
+    "active": true
+  },
+  {
+    "id": "analista-demo",
+    "name": "Analista Demo",
+    "email": "analista@radar.local",
+    "role": "analista",
+    "password_hash": "pbkdf2_sha256$390000$3866c58425dd6b22aef37a1de6e495be$WE2ry885Xfe1tSTGX5lc3BnILqOerUBAM09s1oB1p1o",
+    "active": true
+  }
+]
