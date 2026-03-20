@@ -5,7 +5,6 @@ from flask import Blueprint, current_app, g, jsonify, request
 from radar_preventivo.auth import auth_required
 from radar_preventivo.auth.service import AuthService
 
-
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 

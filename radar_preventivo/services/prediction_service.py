@@ -9,7 +9,6 @@ import pandas as pd
 from radar_preventivo.config import AppSettings
 from radar_preventivo.repositories.dataset_repository import CsvDatasetRepository
 
-
 logger = logging.getLogger(__name__)
 
 

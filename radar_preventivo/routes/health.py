@@ -4,7 +4,6 @@ from flask import Blueprint, current_app, jsonify
 
 from radar_preventivo.services import PredictionService
 
-
 health_bp = Blueprint("health", __name__)
 
 

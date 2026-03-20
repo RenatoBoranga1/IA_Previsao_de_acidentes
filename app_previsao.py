@@ -5,7 +5,6 @@ import os
 
 from radar_preventivo import create_app
 
-
 logging.basicConfig(
     level=os.getenv("LOG_LEVEL", "INFO").upper(),
     format="%(asctime)s | %(levelname)s | %(message)s",

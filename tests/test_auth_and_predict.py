@@ -4,7 +4,6 @@ from pathlib import Path
 
 from radar_preventivo import create_app
 
-
 CSV_FIXTURE = """Data;QUANTIDADE;Motorista;Localidade;Tipo de Evento
 01/01/2025;5;Motorista A;Local A;Aceleração
 02/01/2025;4;Motorista B;Local A;Fadiga

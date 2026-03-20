@@ -5,7 +5,6 @@ import hashlib
 import hmac
 import secrets
 
-
 DEFAULT_ITERATIONS = 390000
 PASSWORD_SCHEME = "pbkdf2_sha256"
 

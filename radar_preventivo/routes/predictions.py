@@ -5,7 +5,6 @@ from flask import Blueprint, current_app, jsonify, request
 from radar_preventivo.auth import auth_required
 from radar_preventivo.services import PredictionService
 
-
 predictions_bp = Blueprint("predictions", __name__)
 
 
